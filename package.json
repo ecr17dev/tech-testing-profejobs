@@ -1,0 +1,23 @@
+{
+  "name": "tech-testing-profejobs",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "start": "node scripts/start-smart.js",
+    "start:backend": "npm run start:dev --workspace backend",
+    "start:frontend": "npm run ng --workspace frontend -- serve --proxy-config proxy.conf.json",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "npm run test --workspace backend -- --runInBand",
+    "test:frontend": "npm run test --workspace frontend -- --watch=false",
+    "build": "npm run build:backend && npm run build:frontend",
+    "build:backend": "npm run build --workspace backend",
+    "build:frontend": "npm run build --workspace frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

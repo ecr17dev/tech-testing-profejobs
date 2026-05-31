@@ -1,0 +1,28 @@
+# Node
+node_modules/
+**/node_modules/
+
+# Build
+backend/dist/
+frontend/dist/
+coverage/
+
+# Environment
+.env
+.env.*
+backend/.env
+frontend/.env
+
+# SQLite
+backend/data/*.sqlite
+backend/data/*.sqlite-shm
+backend/data/*.sqlite-wal
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS
+.DS_Store
