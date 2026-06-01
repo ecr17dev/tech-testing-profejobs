@@ -44,6 +44,12 @@ import { CurrentUserService } from '../services/current-user.service';
             <i-tabler name="users" class="nav-icon"></i-tabler>
             <span>Alumnos</span>
           </a>
+          @if (canManageTeachers) {
+            <a routerLink="/app/teachers" routerLinkActive="active" (click)="closeSidebar()">
+              <i-tabler name="user" class="nav-icon"></i-tabler>
+              <span>Profesores</span>
+            </a>
+          }
           <a routerLink="/app/data" routerLinkActive="active" (click)="closeSidebar()">
             <i-tabler name="chart-bar" class="nav-icon"></i-tabler>
             <span>Datos Académicos</span>
@@ -400,6 +406,10 @@ export class AppShellComponent implements OnDestroy {
 
     const initials = words.slice(0, 2).map((word) => word[0]?.toUpperCase() ?? '');
     return initials.join('');
+  }
+
+  get canManageTeachers(): boolean {
+    return this.currentUserService.canManageTeachers();
   }
 
   toggleSidebar(): void {

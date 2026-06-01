@@ -118,4 +118,9 @@ export class CurrentUserService {
     const role = this.getCurrentRole();
     return role === 'DIRECTOR' || role === 'UTP';
   }
+
+  canManageTeachers(): boolean {
+    const role = this.getCurrentRole();
+    return role === 'DIRECTOR' || role === 'UTP';
+  }
 }

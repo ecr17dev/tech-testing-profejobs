@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard, guestGuard } from './core/guards/auth.guard';
+import { authGuard, guestGuard, roleGuard } from './core/guards/auth.guard';
 import { AppShellComponent } from './core/layout/app-shell.component';
 import { LoginPageComponent } from './features/auth/pages/login-page.component';
 import { ForgotPasswordPageComponent } from './features/auth/pages/forgot-password-page.component';
@@ -8,6 +8,7 @@ import { DashboardPageComponent } from './features/dashboard/pages/dashboard-pag
 import { GradebookPageComponent } from './features/gradebook/pages/gradebook-page.component';
 import { StudentDetailsPageComponent } from './features/students/pages/student-details-page.component';
 import { StudentsListPageComponent } from './features/students/pages/students-list-page.component';
+import { TeachersListPageComponent } from './features/teachers/pages/teachers-list-page.component';
 
 export const routes: Routes = [
   {
@@ -41,6 +42,11 @@ export const routes: Routes = [
       {
         path: 'students',
         component: StudentsListPageComponent,
+      },
+      {
+        path: 'teachers',
+        canActivate: [roleGuard(['DIRECTOR', 'UTP'])],
+        component: TeachersListPageComponent,
       },
       {
         path: 'data',
