@@ -1,9 +1,20 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiForbiddenResponse,
+  ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -65,6 +76,29 @@ export class SubjectsController {
     @CurrentUserDecorator() currentUser: CurrentUser,
   ) {
     return this.subjectsService.createEvaluation(subjectId, dto, currentUser);
+  }
+
+  @Delete(':subjectId/evaluations/:evaluationId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Eliminar una evaluación de la asignatura' })
+  @ApiNoContentResponse({ description: 'Evaluación eliminada exitosamente' })
+  @ApiNotFoundResponse({
+    description: 'Asignatura, evaluación o período académico no encontrado',
+  })
+  @ApiForbiddenResponse({
+    description:
+      'Período cerrado o no tienes permisos para gestionar esta asignatura',
+  })
+  async removeEvaluation(
+    @Param('subjectId') subjectId: string,
+    @Param('evaluationId') evaluationId: string,
+    @CurrentUserDecorator() currentUser: CurrentUser,
+  ) {
+    await this.subjectsService.removeEvaluation(
+      subjectId,
+      evaluationId,
+      currentUser,
+    );
   }
 
   @Get(':subjectId/gradebook')

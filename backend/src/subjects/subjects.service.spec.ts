@@ -5,7 +5,7 @@ import {
   ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
-import { AcademicPeriod, Evaluation, Subject } from '../database/entities';
+import { AcademicPeriod, Evaluation, Grade, Subject } from '../database/entities';
 import { SubjectsService } from './subjects.service';
 import { UserRole } from '../common/enums/user-role.enum';
 
@@ -14,6 +14,7 @@ function createRepositoryMock() {
     findOne: jest.fn(),
     save: jest.fn(),
     create: jest.fn(),
+    delete: jest.fn(),
     createQueryBuilder: jest.fn(),
   };
 }
@@ -23,6 +24,7 @@ describe('SubjectsService', () => {
   const subjectsRepo = createRepositoryMock();
   const evaluationsRepo = createRepositoryMock();
   const periodsRepo = createRepositoryMock();
+  const gradesRepo = createRepositoryMock();
 
   const currentTeacher = {
     id: 'teacher-1',
@@ -59,6 +61,7 @@ describe('SubjectsService', () => {
           provide: getRepositoryToken(AcademicPeriod),
           useValue: periodsRepo,
         },
+        { provide: getRepositoryToken(Grade), useValue: gradesRepo },
       ],
     }).compile();
 
@@ -82,6 +85,8 @@ describe('SubjectsService', () => {
           id: 'eval-new',
         }) as Evaluation,
     );
+    evaluationsRepo.delete.mockResolvedValue({ affected: 1 });
+    gradesRepo.delete.mockResolvedValue({ affected: 0 });
   });
 
   it('creates evaluation with next display order', async () => {
@@ -156,6 +161,42 @@ describe('SubjectsService', () => {
         { name: 'Prueba 2' },
         currentTeacher,
       ),
+    ).rejects.toBeInstanceOf(NotFoundException);
+  });
+
+  it('deletes evaluation and related grades', async () => {
+    evaluationsRepo.findOne.mockResolvedValue({
+      id: 'eval-1',
+      subjectId: 'subject-1',
+      institutionId: 'inst-1',
+    });
+
+    await service.removeEvaluation('subject-1', 'eval-1', currentTeacher);
+
+    expect(gradesRepo.delete).toHaveBeenCalledWith({
+      institutionId: 'inst-1',
+      evaluationId: 'eval-1',
+    });
+    expect(evaluationsRepo.delete).toHaveBeenCalledWith({
+      id: 'eval-1',
+      subjectId: 'subject-1',
+      institutionId: 'inst-1',
+    });
+  });
+
+  it('rejects evaluation deletion when period is closed', async () => {
+    periodsRepo.findOne.mockResolvedValue({ ...periodOpen, isOpen: false });
+
+    await expect(
+      service.removeEvaluation('subject-1', 'eval-1', currentTeacher),
+    ).rejects.toBeInstanceOf(ForbiddenException);
+  });
+
+  it('rejects evaluation deletion when evaluation is missing', async () => {
+    evaluationsRepo.findOne.mockResolvedValue(null);
+
+    await expect(
+      service.removeEvaluation('subject-1', 'eval-missing', currentTeacher),
     ).rejects.toBeInstanceOf(NotFoundException);
   });
 });

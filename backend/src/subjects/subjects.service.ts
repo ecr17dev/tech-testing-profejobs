@@ -6,7 +6,12 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AcademicPeriod, Evaluation, Subject } from '../database/entities';
+import {
+  AcademicPeriod,
+  Evaluation,
+  Grade,
+  Subject,
+} from '../database/entities';
 import { CurrentUser } from '../common/auth/current-user.interface';
 import { UserRole } from '../common/enums/user-role.enum';
 import { CreateEvaluationDto } from './dto/create-evaluation.dto';
@@ -20,6 +25,8 @@ export class SubjectsService {
     private readonly evaluationsRepository: Repository<Evaluation>,
     @InjectRepository(AcademicPeriod)
     private readonly periodsRepository: Repository<AcademicPeriod>,
+    @InjectRepository(Grade)
+    private readonly gradesRepository: Repository<Grade>,
   ) {}
 
   async findVisibleSubjects(currentUser: CurrentUser) {
@@ -81,37 +88,7 @@ export class SubjectsService {
     dto: CreateEvaluationDto,
     currentUser: CurrentUser,
   ) {
-    const subject = await this.subjectsRepository.findOne({
-      where: { id: subjectId, institutionId: currentUser.institutionId },
-    });
-
-    if (!subject) {
-      throw new NotFoundException('Asignatura no encontrada');
-    }
-
-    if (
-      currentUser.role === UserRole.TEACHER &&
-      subject.teacherId !== currentUser.id
-    ) {
-      throw new ForbiddenException('Solo puedes gestionar tus asignaturas');
-    }
-
-    const period = await this.periodsRepository.findOne({
-      where: {
-        id: subject.academicPeriodId,
-        institutionId: currentUser.institutionId,
-      },
-    });
-
-    if (!period) {
-      throw new NotFoundException('Período académico no encontrado');
-    }
-
-    if (!period.isOpen) {
-      throw new ForbiddenException(
-        'El período académico está cerrado para modificaciones',
-      );
-    }
+    const subject = await this.assertSubjectWritableByUser(subjectId, currentUser);
 
     const orderResult = await this.evaluationsRepository
       .createQueryBuilder('evaluation')
@@ -158,5 +135,75 @@ export class SubjectsService {
 
       throw error;
     }
+  }
+
+  async removeEvaluation(
+    subjectId: string,
+    evaluationId: string,
+    currentUser: CurrentUser,
+  ): Promise<void> {
+    const subject = await this.assertSubjectWritableByUser(subjectId, currentUser);
+
+    const evaluation = await this.evaluationsRepository.findOne({
+      where: {
+        id: evaluationId,
+        subjectId: subject.id,
+        institutionId: currentUser.institutionId,
+      },
+    });
+
+    if (!evaluation) {
+      throw new NotFoundException('Evaluación no encontrada');
+    }
+
+    await this.gradesRepository.delete({
+      institutionId: currentUser.institutionId,
+      evaluationId: evaluation.id,
+    });
+
+    await this.evaluationsRepository.delete({
+      id: evaluation.id,
+      subjectId: subject.id,
+      institutionId: currentUser.institutionId,
+    });
+  }
+
+  private async assertSubjectWritableByUser(
+    subjectId: string,
+    currentUser: CurrentUser,
+  ): Promise<Subject> {
+    const subject = await this.subjectsRepository.findOne({
+      where: { id: subjectId, institutionId: currentUser.institutionId },
+    });
+
+    if (!subject) {
+      throw new NotFoundException('Asignatura no encontrada');
+    }
+
+    if (
+      currentUser.role === UserRole.TEACHER &&
+      subject.teacherId !== currentUser.id
+    ) {
+      throw new ForbiddenException('Solo puedes gestionar tus asignaturas');
+    }
+
+    const period = await this.periodsRepository.findOne({
+      where: {
+        id: subject.academicPeriodId,
+        institutionId: currentUser.institutionId,
+      },
+    });
+
+    if (!period) {
+      throw new NotFoundException('Período académico no encontrado');
+    }
+
+    if (!period.isOpen) {
+      throw new ForbiddenException(
+        'El período académico está cerrado para modificaciones',
+      );
+    }
+
+    return subject;
   }
 }
