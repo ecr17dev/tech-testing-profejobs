@@ -17,11 +17,6 @@ import { getHttpErrorMessage } from '../../../core/utils/http-error-message.util
           <h1>Dashboard Académico</h1>
           <p>Resumen general de su desempeño institucional y estado de períodos.</p>
         </div>
-
-        <div class="search-wrap">
-              <i-tabler name="search" class="search-icon"></i-tabler>
-              <input type="search" placeholder="Buscar alumnos o clases..." />
-            </div>
       </header>
 
       @if (error) {
@@ -136,38 +131,6 @@ import { getHttpErrorMessage } from '../../../core/utils/http-error-message.util
         margin: 0.2rem 0 0;
         font-size: 0.86rem;
         color: #dbe8ff;
-      }
-
-      .hero input {
-        width: min(320px, 100%);
-        border: 1px solid rgba(207, 222, 255, 0.4);
-        background: rgba(255, 255, 255, 0.1);
-        color: #fff;
-        border-radius: 10px;
-        padding: 0.5rem 0.7rem;
-      }
-
-      .hero input::placeholder {
-        color: rgba(242, 247, 255, 0.7);
-      }
-
-      .search-wrap {
-        position: relative;
-        display: flex;
-        align-items: center;
-      }
-
-      .search-icon {
-        position: absolute;
-        left: 0.6rem;
-        width: 16px;
-        height: 16px;
-        color: rgba(242, 247, 255, 0.7);
-        pointer-events: none;
-      }
-
-      .search-wrap input {
-        padding-left: 2rem;
       }
 
       .kpi-icon {
@@ -328,9 +291,40 @@ import { getHttpErrorMessage } from '../../../core/utils/http-error-message.util
         border: 1px solid #f1c4bc;
       }
 
-      @media (max-width: 1000px) {
+      @media (max-width: 768px) {
         .grid-zone {
           grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .hero {
+          padding: 0.9rem 1rem;
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .kpis {
+          padding: 0.6rem 0.65rem;
+          gap: 0.55rem;
+          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        }
+
+        .kpi-card {
+          padding: 0.7rem;
+        }
+
+        .kpi-card strong {
+          font-size: 1.5rem;
+        }
+
+        .grid-zone {
+          padding: 0 0.65rem 0.8rem;
+          gap: 0.6rem;
+        }
+
+        .panel {
+          padding: 0.75rem;
         }
       }
     `,

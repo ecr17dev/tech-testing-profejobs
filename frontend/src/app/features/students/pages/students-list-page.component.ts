@@ -12,6 +12,11 @@ import {
   StudentFormSubmitPayload,
 } from '../components/student-form.component';
 import { TablerIconComponent } from '../../../shared/icons/tabler-icon.component';
+import {
+  XlsxExportService,
+} from '../../../shared/services/xlsx-export.service';
+
+type StudentsStatusFilter = 'active' | 'inactive' | 'all';
 
 @Component({
   selector: 'app-students-list-page',
@@ -40,10 +45,22 @@ import { TablerIconComponent } from '../../../shared/icons/tabler-icon.component
             <header>
               <h2>Alumnos</h2>
               <div class="header-actions">
-                <button type="button" class="icon-btn" aria-label="Filtrar">
+                <button
+                  type="button"
+                  class="icon-btn"
+                  [class.active]="isFilterPanelOpen"
+                  aria-label="Filtrar"
+                  (click)="toggleFilterPanel()"
+                >
                   <i-tabler name="filter" class="btn-icon"></i-tabler>
                 </button>
-                <button type="button" class="icon-btn" aria-label="Exportar">
+                <button
+                  type="button"
+                  class="icon-btn"
+                  aria-label="Exportar"
+                  [disabled]="students.length === 0 || filteredStudents.length === 0"
+                  (click)="downloadVisibleStudents()"
+                >
                   <i-tabler name="download" class="btn-icon"></i-tabler>
                 </button>
                 @if (canManage) {
@@ -58,13 +75,33 @@ import { TablerIconComponent } from '../../../shared/icons/tabler-icon.component
               </div>
             </header>
 
-            <div class="toolbar">
-              <label class="filter-toggle">
-                <input type="checkbox" [checked]="showInactive" (change)="toggleInactive($event)" />
-                Mostrar inactivos
-              </label>
-            </div>
+            @if (isFilterPanelOpen) {
+              <div class="toolbar">
+                <label>
+                  Buscar alumno
+                  <input
+                    type="search"
+                    [value]="studentSearchTerm"
+                    placeholder="Nombre, apellido o RUT"
+                    (input)="onStudentSearchChange($event)"
+                  />
+                </label>
 
+                <label>
+                  Estado
+                  <select
+                    [value]="statusFilter"
+                    (change)="onStatusFilterChange($event)"
+                  >
+                    <option value="active">Activos</option>
+                    <option value="inactive">Inactivos</option>
+                    <option value="all">Todos</option>
+                  </select>
+                </label>
+              </div>
+            }
+
+            <div class="responsive-table-wrap">
             <table class="students-table">
             <thead>
               <tr>
@@ -126,6 +163,7 @@ import { TablerIconComponent } from '../../../shared/icons/tabler-icon.component
               }
             </tbody>
           </table>
+          </div>
           </article>
         }
 
@@ -219,6 +257,17 @@ import { TablerIconComponent } from '../../../shared/icons/tabler-icon.component
         justify-content: center;
       }
 
+      .icon-btn.active {
+        border-color: #1d5edd;
+        color: #1d5edd;
+        background: #eef4ff;
+      }
+
+      .icon-btn:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+
       .icon-btn:hover {
         border-color: #1d5edd;
         color: #1d5edd;
@@ -252,24 +301,31 @@ import { TablerIconComponent } from '../../../shared/icons/tabler-icon.component
       }
 
       .toolbar {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
+        display: grid;
+        gap: 0.55rem;
         padding: 0.55rem 0.8rem;
         border-bottom: 1px solid #edf0f5;
+        background: #f8fbff;
       }
 
-      .filter-toggle {
-        font-size: 0.8rem;
+      .toolbar label {
+        display: grid;
+        gap: 0.22rem;
+        font-size: 0.74rem;
         color: #5b6c84;
-        display: flex;
-        align-items: center;
-        gap: 0.35rem;
-        cursor: pointer;
+      }
+
+      .toolbar input,
+      .toolbar select {
+        border: 1px solid #cad4e6;
+        border-radius: 7px;
+        padding: 0.45rem 0.55rem;
+        background: #fff;
       }
 
       .students-table {
         width: 100%;
+        min-width: 640px;
         border-collapse: collapse;
         background: #fff;
         border: 1px solid var(--taruca-border);
@@ -419,6 +475,42 @@ import { TablerIconComponent } from '../../../shared/icons/tabler-icon.component
         box-shadow: var(--taruca-shadow-md);
         padding: 1rem;
       }
+
+      @media (max-width: 576px) {
+        .hero {
+          padding: 0.9rem 1rem;
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .grid-card > header {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0.5rem;
+        }
+
+        .header-actions {
+          flex-wrap: wrap;
+        }
+
+        .content {
+          padding: 0.6rem 0.65rem 0.8rem;
+        }
+
+        .students-table {
+          min-width: 520px;
+        }
+
+        th,
+        td {
+          padding: 0.45rem 0.55rem;
+          font-size: 0.74rem;
+        }
+
+        .toolbar {
+          padding: 0.45rem 0.65rem;
+        }
+      }
     `,
   ],
 })
@@ -428,7 +520,9 @@ export class StudentsListPageComponent implements OnInit {
   error: string | null = null;
 
   students: Student[] = [];
-  showInactive = false;
+  isFilterPanelOpen = false;
+  studentSearchTerm = '';
+  statusFilter: StudentsStatusFilter = 'active';
   isFormOpen = false;
   editingStudent: Student | null = null;
 
@@ -437,6 +531,7 @@ export class StudentsListPageComponent implements OnInit {
     private readonly router: Router,
     private readonly currentUserService: CurrentUserService,
     private readonly toast: ToastService,
+    private readonly xlsxExport: XlsxExportService,
   ) {}
 
   get canManage(): boolean {
@@ -444,20 +539,69 @@ export class StudentsListPageComponent implements OnInit {
   }
 
   get filteredStudents(): Student[] {
-    if (this.showInactive) {
-      return this.students;
-    }
+    const searchTerm = this.studentSearchTerm.trim().toLowerCase();
 
-    return this.students.filter((student) => student.isActive);
+    return this.students.filter((student) => {
+      if (this.statusFilter === 'active' && !student.isActive) {
+        return false;
+      }
+
+      if (this.statusFilter === 'inactive' && student.isActive) {
+        return false;
+      }
+
+      if (!searchTerm) {
+        return true;
+      }
+
+      const fullName = `${student.firstName} ${student.lastName}`.toLowerCase();
+      const rut = (student.rut ?? '').toLowerCase();
+
+      return (
+        fullName.includes(searchTerm) ||
+        student.firstName.toLowerCase().includes(searchTerm) ||
+        student.lastName.toLowerCase().includes(searchTerm) ||
+        rut.includes(searchTerm)
+      );
+    });
   }
 
   ngOnInit(): void {
     this.loadStudents();
   }
 
-  toggleInactive(event: Event): void {
-    const checked = (event.target as HTMLInputElement).checked;
-    this.showInactive = checked;
+  toggleFilterPanel(): void {
+    this.isFilterPanelOpen = !this.isFilterPanelOpen;
+  }
+
+  onStudentSearchChange(event: Event): void {
+    this.studentSearchTerm = (event.target as HTMLInputElement).value ?? '';
+  }
+
+  onStatusFilterChange(event: Event): void {
+    const value = (event.target as HTMLSelectElement).value;
+
+    if (value === 'active' || value === 'inactive' || value === 'all') {
+      this.statusFilter = value;
+    }
+  }
+
+  downloadVisibleStudents(): void {
+    if (this.filteredStudents.length === 0) {
+      this.toast.info('No hay alumnos visibles para exportar.');
+      return;
+    }
+
+    const rows = this.filteredStudents.map((student) => ({
+      Nombre: student.firstName,
+      Apellido: student.lastName,
+      RUT: student.rut ?? '',
+      Estado: student.isActive ? 'Activo' : 'Inactivo',
+    }));
+
+    const fileName = `taruca-alumnos-${this.xlsxExport.getCurrentDateStamp()}.xlsx`;
+    this.xlsxExport.exportRowsToXlsx(fileName, 'Alumnos', rows);
+    this.toast.success('Listado de alumnos exportado correctamente.');
   }
 
   openCreateForm(): void {

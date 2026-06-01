@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
-import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Component, OnDestroy } from '@angular/core';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { TablerIconComponent } from '../../shared/icons/tabler-icon.component';
 import { CurrentUserService } from '../services/current-user.service';
 
@@ -8,8 +10,17 @@ import { CurrentUserService } from '../services/current-user.service';
   standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive, TablerIconComponent],
   template: `
-    <div class="shell">
-      <aside class="sidebar">
+    <div class="shell" [class.sidebar-open]="sidebarOpen">
+      @if (sidebarOpen) {
+        <div class="sidebar-backdrop" (click)="closeSidebar()"></div>
+      }
+
+      <aside class="sidebar" [class.open]="sidebarOpen">
+        <button type="button" class="sidebar-close" (click)="closeSidebar()" aria-label="Cerrar menú">
+          <span></span>
+          <span></span>
+        </button>
+
         <div class="brand">
           <h2>Taruca</h2>
           <p>Gestión Académica</p>
@@ -20,19 +31,20 @@ import { CurrentUserService } from '../services/current-user.service';
             routerLink="/app/dashboard"
             routerLinkActive="active"
             [routerLinkActiveOptions]="{ exact: true }"
+            (click)="closeSidebar()"
           >
             <i-tabler name="home" class="nav-icon"></i-tabler>
             <span>Inicio</span>
           </a>
-          <a routerLink="/app/gradebook" routerLinkActive="active">
+          <a routerLink="/app/gradebook" routerLinkActive="active" (click)="closeSidebar()">
             <i-tabler name="book" class="nav-icon"></i-tabler>
             <span>Libro de Notas</span>
           </a>
-          <a routerLink="/app/students" routerLinkActive="active">
+          <a routerLink="/app/students" routerLinkActive="active" (click)="closeSidebar()">
             <i-tabler name="users" class="nav-icon"></i-tabler>
             <span>Alumnos</span>
           </a>
-          <a routerLink="/app/data" routerLinkActive="active">
+          <a routerLink="/app/data" routerLinkActive="active" (click)="closeSidebar()">
             <i-tabler name="chart-bar" class="nav-icon"></i-tabler>
             <span>Datos Académicos</span>
           </a>
@@ -49,15 +61,6 @@ import { CurrentUserService } from '../services/current-user.service';
             </section>
           }
 
-          <a class="aux-link" href="#" (click)="$event.preventDefault()">
-            <i-tabler name="settings" class="aux-icon"></i-tabler>
-            Configuración
-          </a>
-          <a class="aux-link" href="#" (click)="$event.preventDefault()">
-            <i-tabler name="bell" class="aux-icon"></i-tabler>
-            Soporte
-          </a>
-
           <button type="button" class="logout" (click)="logout()">
             <i-tabler name="logout" class="logout-icon"></i-tabler>
             Cerrar Sesión
@@ -66,6 +69,14 @@ import { CurrentUserService } from '../services/current-user.service';
       </aside>
 
       <main class="content">
+        <div class="mobile-bar">
+          <button type="button" class="hamburger" (click)="toggleSidebar()" [attr.aria-label]="sidebarOpen ? 'Cerrar menú' : 'Abrir menú'">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <strong class="mobile-brand">Taruca</strong>
+        </div>
         <router-outlet></router-outlet>
       </main>
     </div>
@@ -84,7 +95,9 @@ import { CurrentUserService } from '../services/current-user.service';
 
       .sidebar {
         position: fixed;
-        inset: 0 auto 0 0;
+        top: 0;
+        left: 0;
+        bottom: 0;
         width: 280px;
         background: var(--taruca-sidebar);
         color: #e8efff;
@@ -93,6 +106,19 @@ import { CurrentUserService } from '../services/current-user.service';
         gap: 1.5rem;
         padding: 1rem;
         box-shadow: 2px 0 12px rgba(12, 23, 46, 0.24);
+        z-index: 40;
+      }
+
+      .sidebar-close {
+        display: none;
+      }
+
+      .sidebar-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(13, 23, 40, 0.45);
+        z-index: 35;
+        animation: fadeIn 180ms ease-out both;
       }
 
       .brand h2 {
@@ -181,27 +207,6 @@ import { CurrentUserService } from '../services/current-user.service';
         font-size: 0.7rem;
       }
 
-      .aux-link {
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-        text-decoration: none;
-        color: #a8bedb;
-        font-size: 0.75rem;
-        border-radius: 8px;
-        padding: 0.5rem 0.6rem;
-      }
-
-      .aux-link:hover {
-        background: #2b4566;
-      }
-
-      .aux-icon {
-        width: 16px;
-        height: 16px;
-        flex-shrink: 0;
-      }
-
       .logout {
         display: flex;
         align-items: center;
@@ -214,6 +219,11 @@ import { CurrentUserService } from '../services/current-user.service';
         font-size: 0.72rem;
         font-weight: 600;
         cursor: pointer;
+        transition: background-color 150ms ease;
+      }
+
+      .logout:hover {
+        background: #e03344;
       }
 
       .logout-icon {
@@ -225,32 +235,154 @@ import { CurrentUserService } from '../services/current-user.service';
       .content {
         margin-left: 280px;
         min-height: 100dvh;
+        position: relative;
+      }
+
+      .mobile-bar {
+        display: none;
       }
 
       @media (max-width: 960px) {
         .sidebar {
-          position: static;
-          width: 100%;
-          grid-template-rows: auto;
-          box-shadow: none;
+          transform: translateX(-100%);
+          transition: transform 280ms cubic-bezier(0.25, 0.1, 0.25, 1);
         }
 
-        .footer-zone {
-          align-content: start;
+        .sidebar.open {
+          transform: translateX(0);
         }
 
         .content {
           margin-left: 0;
+          padding-top: 52px;
+        }
+
+        .mobile-bar {
+          display: flex;
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 52px;
+          z-index: 30;
+          background: var(--taruca-sidebar);
+          align-items: center;
+          gap: 0.8rem;
+          padding: 0 1rem;
+          box-shadow: 0 1px 8px rgba(12, 23, 46, 0.26);
+        }
+
+        .hamburger {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          gap: 5px;
+          border: 0;
+          background: rgba(255, 255, 255, 0.08);
+          padding: 8px;
+          cursor: pointer;
+          border-radius: 8px;
+          width: 38px;
+          height: 38px;
+          transition: background-color 150ms ease;
+        }
+
+        .hamburger:hover {
+          background: rgba(255, 255, 255, 0.16);
+        }
+
+        .hamburger span {
+          display: block;
+          width: 20px;
+          height: 2px;
+          background: #c7d5eb;
+          border-radius: 2px;
+          transition: transform 240ms ease, opacity 180ms ease;
+          transform-origin: center;
+        }
+
+        .sidebar-open .hamburger {
+          background: rgba(255, 255, 255, 0.14);
+        }
+
+        .sidebar-open .hamburger span:nth-child(1) {
+          transform: translateY(7px) rotate(45deg);
+        }
+
+        .sidebar-open .hamburger span:nth-child(2) {
+          opacity: 0;
+          transform: scaleX(0);
+        }
+
+        .sidebar-open .hamburger span:nth-child(3) {
+          transform: translateY(-7px) rotate(-45deg);
+        }
+
+        .mobile-brand {
+          color: #fff;
+          font-size: 1rem;
+          font-weight: 700;
+          letter-spacing: -0.01em;
+        }
+
+        .sidebar-close {
+          display: grid;
+          place-items: center;
+          position: absolute;
+          top: 0.55rem;
+          right: 0.55rem;
+          width: 34px;
+          height: 34px;
+          border: 0;
+          background: rgba(255, 255, 255, 0.08);
+          border-radius: 8px;
+          cursor: pointer;
+          transition: background-color 150ms ease;
+        }
+
+        .sidebar-close:hover {
+          background: rgba(255, 255, 255, 0.16);
+        }
+
+        .sidebar-close span {
+          grid-area: 1 / 1;
+          display: block;
+          width: 16px;
+          height: 2px;
+          background: #c7d5eb;
+          border-radius: 2px;
+          transition: background-color 150ms ease;
+        }
+
+        .sidebar-close span:nth-child(1) {
+          transform: rotate(45deg);
+        }
+
+        .sidebar-close span:nth-child(2) {
+          transform: rotate(-45deg);
+        }
+
+        .sidebar-close:hover span {
+          background: #fff;
         }
       }
     `,
   ],
 })
-export class AppShellComponent {
+export class AppShellComponent implements OnDestroy {
+  sidebarOpen = false;
+  private readonly routerSub: Subscription;
+
   constructor(
     private readonly currentUserService: CurrentUserService,
     private readonly router: Router,
-  ) {}
+  ) {
+    this.routerSub = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.sidebarOpen = false;
+      });
+  }
 
   get profileLabel(): string {
     return this.currentUserService.getCurrentProfile()?.label ?? '';
@@ -270,8 +402,21 @@ export class AppShellComponent {
     return initials.join('');
   }
 
+  toggleSidebar(): void {
+    this.sidebarOpen = !this.sidebarOpen;
+  }
+
+  closeSidebar(): void {
+    this.sidebarOpen = false;
+  }
+
   logout(): void {
+    this.sidebarOpen = false;
     this.currentUserService.clearAuthToken();
     void this.router.navigate(['/login']);
+  }
+
+  ngOnDestroy(): void {
+    this.routerSub.unsubscribe();
   }
 }

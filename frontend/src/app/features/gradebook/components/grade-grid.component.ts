@@ -15,7 +15,7 @@ export interface GridCellSelection {
   selector: 'app-grade-grid',
   standalone: true,
   template: `
-    <div class="table-wrapper">
+    <div class="table-wrapper responsive-table-wrap">
       <table>
         <thead>
           <tr>
@@ -62,6 +62,7 @@ export interface GridCellSelection {
     `
       .table-wrapper {
         overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
       }
 
       table {
@@ -135,6 +136,26 @@ export interface GridCellSelection {
 
       .average--risk {
         color: #b42318;
+      }
+
+      @media (max-width: 576px) {
+        th,
+        td {
+          padding: 0.4rem 0.45rem;
+          font-size: 0.72rem;
+        }
+
+        .student {
+          min-width: 140px;
+        }
+
+        table {
+          min-width: 520px;
+        }
+
+        .cell {
+          min-width: 52px;
+        }
       }
     `,
   ],

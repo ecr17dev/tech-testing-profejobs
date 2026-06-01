@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { CurrentUserService } from '../../../core/services/current-user.service';
+import { ToastService } from '../../../core/services/toast.service';
 import { GradebookApiService } from '../../gradebook/services/gradebook-api.service';
 import { DataOverviewPageComponent } from './data-overview-page.component';
 
@@ -17,6 +18,13 @@ describe('DataOverviewPageComponent', () => {
   const currentUserMock = {
     canManageAcademicPeriods: vi.fn(),
   };
+  const toastMock = {
+    success: vi.fn(),
+    error: vi.fn(),
+    warning: vi.fn(),
+    info: vi.fn(),
+    confirm: vi.fn(),
+  };
 
   beforeEach(async () => {
     vi.clearAllMocks();
@@ -26,11 +34,12 @@ describe('DataOverviewPageComponent', () => {
       providers: [
         { provide: GradebookApiService, useValue: apiMock },
         { provide: CurrentUserService, useValue: currentUserMock },
+        { provide: ToastService, useValue: toastMock },
       ],
     }).compileComponents();
   });
 
-  it('allows directors/utp to toggle period status from UI', () => {
+  it('allows directors/utp to toggle period status from UI', async () => {
     currentUserMock.canManageAcademicPeriods.mockReturnValue(true);
     apiMock.getSubjects.mockReturnValue(
       of([
@@ -66,7 +75,7 @@ describe('DataOverviewPageComponent', () => {
       }),
     );
 
-    vi.spyOn(window, 'confirm').mockReturnValue(true);
+    toastMock.confirm.mockResolvedValue(true);
 
     fixture = TestBed.createComponent(DataOverviewPageComponent);
     component = fixture.componentInstance;
@@ -78,6 +87,7 @@ describe('DataOverviewPageComponent', () => {
 
     expect(toggleButton).not.toBeNull();
     toggleButton?.click();
+    await fixture.whenStable();
     fixture.detectChanges();
 
     expect(apiMock.updateAcademicPeriodStatus).toHaveBeenCalledWith(
@@ -86,7 +96,9 @@ describe('DataOverviewPageComponent', () => {
     );
     expect(component.periods[0]?.isOpen).toBe(false);
     expect(component.subjects[0]?.academicPeriod.isOpen).toBe(false);
-    expect(component.periodActionMessage).toContain('cerrado');
+    expect(toastMock.success).toHaveBeenCalledWith(
+      'Período "Primer Semestre 2026" cerrado correctamente.',
+    );
   });
 
   it('keeps period controls read-only for teacher role', () => {

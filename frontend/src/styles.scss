@@ -1,6 +1,11 @@
 @import 'sweetalert2/dist/sweetalert2.css';
 
 :root {
+  --bp-sm: 576px;
+  --bp-md: 768px;
+  --bp-lg: 1024px;
+  --bp-xl: 1200px;
+
   --taruca-bg: #eef2f8;
   --taruca-bg-soft: #f8f9ff;
   --taruca-surface: #ffffff;
@@ -156,4 +161,41 @@ button:not(:disabled):active, .action-btn:not(:disabled):active,
 /* --- Table row hover transition --- */
 tbody tr {
   transition: background-color 120ms ease;
+}
+
+/* --- Responsive table wrapper --- */
+.responsive-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.responsive-table-wrap::after {
+  content: '';
+  position: sticky;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 24px;
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.06));
+  pointer-events: none;
+}
+
+/* --- Mobile-friendly touch targets --- */
+@media (max-width: 576px) {
+  button, .action-btn, .icon-btn {
+    min-height: 36px;
+    min-width: 36px;
+  }
+
+  input, select, textarea {
+    font-size: 16px;
+  }
+}
+
+/* --- Desktop-only scroll hint --- */
+@media (min-width: 769px) {
+  .responsive-table-wrap::after {
+    display: none;
+  }
 }

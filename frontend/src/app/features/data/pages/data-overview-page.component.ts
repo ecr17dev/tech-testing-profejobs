@@ -17,8 +17,6 @@ import { ToastService } from '../../../core/services/toast.service';
           <h1>Datos Académicos</h1>
           <p>Vista rápida de asignaturas y períodos académicos para el ciclo lectivo actual.</p>
         </div>
-
-        <input type="search" placeholder="Buscar asignatura..." />
       </header>
 
       @if (error) {
@@ -150,19 +148,6 @@ import { ToastService } from '../../../core/services/toast.service';
         margin: 0.2rem 0 0;
         font-size: 0.86rem;
         color: #dbe8ff;
-      }
-
-      .hero input {
-        width: min(300px, 100%);
-        border: 1px solid rgba(207, 222, 255, 0.4);
-        background: rgba(255, 255, 255, 0.1);
-        color: #fff;
-        border-radius: 10px;
-        padding: 0.5rem 0.7rem;
-      }
-
-      .hero input::placeholder {
-        color: rgba(242, 247, 255, 0.7);
       }
 
       .block {
@@ -352,9 +337,32 @@ import { ToastService } from '../../../core/services/toast.service';
         border: 1px solid #d3e4ff;
       }
 
-      @media (max-width: 920px) {
+      @media (max-width: 768px) {
         .summary-row {
           grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .hero {
+          padding: 0.9rem 1rem;
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .block {
+          margin: 0.6rem 0.65rem;
+          padding: 0.7rem;
+        }
+
+        .summary-row {
+          margin: 0.6rem 0.65rem 0.8rem;
+        }
+
+        .subject-grid,
+        .period-grid {
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+          gap: 0.5rem;
         }
       }
     `,

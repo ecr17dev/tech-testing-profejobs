@@ -54,9 +54,12 @@ import { getHttpErrorMessage } from '../../../core/utils/http-error-message.util
         <section class="workspace">
           <article class="panel">
             <h2>Rendimiento por Evaluación</h2>
-            @if (!studentGrades || studentGrades.grades.length === 0) {
+            @if (!hasSubjectContext) {
+              <p class="info">Abre la ficha desde el <a routerLink="/app/gradebook">libro de calificaciones</a> seleccionando una asignatura para ver el detalle de notas.</p>
+            } @else if (!studentGrades || studentGrades.grades.length === 0) {
               <p class="state">No hay calificaciones para mostrar.</p>
             } @else {
+              <div class="responsive-table-wrap">
               <table>
                 <thead>
                   <tr>
@@ -77,6 +80,7 @@ import { getHttpErrorMessage } from '../../../core/utils/http-error-message.util
                   }
                 </tbody>
               </table>
+              </div>
             }
           </article>
 
@@ -240,7 +244,8 @@ import { getHttpErrorMessage } from '../../../core/utils/http-error-message.util
       }
 
       .state,
-      .alert {
+      .alert,
+      .info {
         margin: 0;
         padding: 0.75rem;
         border-radius: 10px;
@@ -256,9 +261,51 @@ import { getHttpErrorMessage } from '../../../core/utils/http-error-message.util
         border: 1px solid #f1c4bc;
       }
 
-      @media (min-width: 1024px) {
+      .info {
+        background: #edf5ff;
+        color: #30568d;
+        border: 1px solid #d3e4ff;
+        margin-top: 0.7rem;
+      }
+
+      .info a {
+        color: #1d4ed8;
+        font-weight: 600;
+        text-decoration: underline;
+      }
+
+      @media (min-width: 768px) {
         .workspace {
           grid-template-columns: 2fr 1fr;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .page {
+          padding: 0.6rem 0.65rem 0.8rem;
+        }
+
+        .hero {
+          padding: 0.75rem;
+        }
+
+        .kpis {
+          grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+          gap: 0.5rem;
+        }
+
+        .kpis article {
+          padding: 0.6rem;
+        }
+
+        .kpis strong {
+          font-size: 1.35rem;
+        }
+
+        th,
+        td {
+          padding: 0.4rem;
+          font-size: 0.72rem;
         }
       }
     `,
@@ -299,6 +346,8 @@ export class StudentDetailsPageComponent implements OnInit {
     return average.toFixed(1);
   }
 
+  hasSubjectContext = false;
+
   ngOnInit(): void {
     this.studentId = this.route.snapshot.paramMap.get('id') ?? '';
     this.subjectId = this.route.snapshot.queryParamMap.get('subjectId') ?? '';
@@ -306,12 +355,16 @@ export class StudentDetailsPageComponent implements OnInit {
     this.subjectName = this.route.snapshot.queryParamMap.get('subjectName') ?? 'Asignatura';
     this.courseName = this.route.snapshot.queryParamMap.get('courseName') ?? 'Curso';
 
-    if (!this.studentId || !this.subjectId) {
-      this.error = 'Falta contexto para cargar el detalle del alumno.';
+    if (!this.studentId) {
+      this.error = 'No se pudo identificar al alumno.';
       return;
     }
 
-    this.loadStudentGrades();
+    this.hasSubjectContext = Boolean(this.subjectId);
+
+    if (this.hasSubjectContext) {
+      this.loadStudentGrades();
+    }
   }
 
   private loadStudentGrades(): void {

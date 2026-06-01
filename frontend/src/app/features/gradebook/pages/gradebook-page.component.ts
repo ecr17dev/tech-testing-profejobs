@@ -21,6 +21,7 @@ import {
   GradeFormSubmitPayload,
 } from '../components/grade-form.component';
 import { PeriodStatusBannerComponent } from '../components/period-status-banner.component';
+import { XlsxExportService } from '../../../shared/services/xlsx-export.service';
 
 @Component({
   selector: 'app-gradebook-page',
@@ -72,8 +73,24 @@ import { PeriodStatusBannerComponent } from '../components/period-status-banner.
               <header>
                 <h2>Registro de Notas</h2>
                 <div class="header-actions">
-                  <button type="button" class="icon-btn" aria-label="Filtrar"><i-tabler name="filter" class="btn-icon"></i-tabler></button>
-                  <button type="button" class="icon-btn" aria-label="Descargar"><i-tabler name="download" class="btn-icon"></i-tabler></button>
+                  <button
+                    type="button"
+                    class="icon-btn"
+                    [class.active]="isFilterPanelOpen"
+                    aria-label="Filtrar"
+                    (click)="toggleFilterPanel()"
+                  >
+                    <i-tabler name="filter" class="btn-icon"></i-tabler>
+                  </button>
+                  <button
+                    type="button"
+                    class="icon-btn"
+                    aria-label="Descargar"
+                    [disabled]="!gradebook || filteredStudents.length === 0"
+                    (click)="downloadVisibleGradebook()"
+                  >
+                    <i-tabler name="download" class="btn-icon"></i-tabler>
+                  </button>
                   <button
                     type="button"
                     class="new-eval"
@@ -85,6 +102,38 @@ import { PeriodStatusBannerComponent } from '../components/period-status-banner.
                 </div>
               </header>
 
+              @if (isFilterPanelOpen) {
+                <div class="filters-panel">
+                  <label>
+                    Buscar alumno
+                    <input
+                      type="search"
+                      [value]="studentSearchTerm"
+                      placeholder="Nombre del alumno"
+                      (input)="onStudentSearchChange($event)"
+                    />
+                  </label>
+
+                  <label class="toggle">
+                    <input
+                      type="checkbox"
+                      [checked]="onlyAtRiskStudents"
+                      (change)="onAtRiskFilterChange($event)"
+                    />
+                    Solo promedio menor a 4.0
+                  </label>
+
+                  <label class="toggle">
+                    <input
+                      type="checkbox"
+                      [checked]="onlyStudentsWithoutGrades"
+                      (change)="onWithoutGradesFilterChange($event)"
+                    />
+                    Solo sin notas
+                  </label>
+                </div>
+              }
+
               @if (isUsingPlaceholderEvaluations) {
                 <p class="table-hint">
                   Esta asignatura no tiene evaluaciones creadas aún. Mostramos columnas guía para
@@ -94,7 +143,7 @@ import { PeriodStatusBannerComponent } from '../components/period-status-banner.
 
               <app-grade-grid
                 [evaluations]="displayEvaluations"
-                [students]="gradebook.students"
+                [students]="filteredStudents"
                 [readonly]="!isEditable"
                 (cellSelected)="onCellSelected($event)"
                 (studentOpened)="openStudentDetails($event.id, $event.fullName, $event.averageRounded)"
@@ -244,9 +293,48 @@ import { PeriodStatusBannerComponent } from '../components/period-status-banner.
         justify-content: center;
       }
 
+      .icon-btn.active {
+        border-color: #1d5edd;
+        color: #1d5edd;
+        background: #eef4ff;
+      }
+
+      .icon-btn:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+
       .btn-icon {
         width: 16px;
         height: 16px;
+      }
+
+      .filters-panel {
+        padding: 0.65rem 0.8rem;
+        border-bottom: 1px solid #e7edf7;
+        background: #f8fbff;
+        display: grid;
+        gap: 0.55rem;
+      }
+
+      .filters-panel label {
+        display: grid;
+        gap: 0.22rem;
+        font-size: 0.74rem;
+        color: #5b6c84;
+      }
+
+      .filters-panel input[type='search'] {
+        border: 1px solid #cad4e6;
+        border-radius: 7px;
+        padding: 0.45rem 0.55rem;
+        background: #fff;
+      }
+
+      .filters-panel .toggle {
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
       }
 
       .side-panel {
@@ -452,14 +540,47 @@ import { PeriodStatusBannerComponent } from '../components/period-status-banner.
         font-weight: 700;
       }
 
-      @media (min-width: 1100px) {
+      @media (min-width: 1024px) {
         .workspace.has-side-panel {
           grid-template-columns: minmax(0, 1fr) 330px;
           align-items: start;
         }
       }
 
-      @media (max-width: 700px) {
+      @media (max-width: 576px) {
+        .hero {
+          padding: 0.9rem 1rem;
+        }
+
+        .subject-select select {
+          min-width: 100%;
+        }
+
+        .grid-card > header {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0.5rem;
+        }
+
+        .header-actions {
+          flex-wrap: wrap;
+        }
+
+        .content {
+          padding: 0.6rem 0.65rem 0.8rem;
+        }
+
+        .filters-panel {
+          padding: 0.5rem 0.65rem;
+        }
+
+        .modal {
+          width: calc(100% - 1rem);
+          max-height: calc(100dvh - 2rem);
+          overflow-y: auto;
+          padding: 0.85rem;
+        }
+
         .cols {
           grid-template-columns: 1fr;
         }
@@ -484,6 +605,10 @@ export class GradebookPageComponent implements OnInit {
   saving = false;
   error: string | null = null;
   infoMessage: string | null = null;
+  isFilterPanelOpen = false;
+  studentSearchTerm = '';
+  onlyAtRiskStudents = false;
+  onlyStudentsWithoutGrades = false;
 
   selection: GridCellSelection | null = null;
 
@@ -495,6 +620,7 @@ export class GradebookPageComponent implements OnInit {
     private readonly formBuilder: FormBuilder,
     private readonly router: Router,
     private readonly toast: ToastService,
+    private readonly xlsxExport: XlsxExportService,
   ) {
     this.newEvaluationForm = this.formBuilder.nonNullable.group({
       name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(120)]],
@@ -520,6 +646,27 @@ export class GradebookPageComponent implements OnInit {
       : this.placeholderEvaluations;
   }
 
+  get filteredStudents() {
+    const students = this.gradebook?.students ?? [];
+    const searchTerm = this.studentSearchTerm.trim().toLowerCase();
+
+    return students.filter((student) => {
+      if (searchTerm && !student.fullName.toLowerCase().includes(searchTerm)) {
+        return false;
+      }
+
+      if (this.onlyAtRiskStudents && !student.isBelowPassingGrade) {
+        return false;
+      }
+
+      if (this.onlyStudentsWithoutGrades && student.grades.length > 0) {
+        return false;
+      }
+
+      return true;
+    });
+  }
+
   ngOnInit(): void {
     this.loadSubjects();
   }
@@ -539,6 +686,56 @@ export class GradebookPageComponent implements OnInit {
   onCellSelected(selection: GridCellSelection): void {
     this.selection = selection;
     this.infoMessage = null;
+  }
+
+  toggleFilterPanel(): void {
+    this.isFilterPanelOpen = !this.isFilterPanelOpen;
+  }
+
+  onStudentSearchChange(event: Event): void {
+    this.studentSearchTerm = (event.target as HTMLInputElement).value ?? '';
+    this.syncSelectionWithFilters();
+  }
+
+  onAtRiskFilterChange(event: Event): void {
+    this.onlyAtRiskStudents = (event.target as HTMLInputElement).checked;
+    this.syncSelectionWithFilters();
+  }
+
+  onWithoutGradesFilterChange(event: Event): void {
+    this.onlyStudentsWithoutGrades = (event.target as HTMLInputElement).checked;
+    this.syncSelectionWithFilters();
+  }
+
+  downloadVisibleGradebook(): void {
+    if (!this.gradebook) {
+      return;
+    }
+
+    if (this.filteredStudents.length === 0) {
+      this.toast.info('No hay filas visibles para exportar en el libro de calificaciones.');
+      return;
+    }
+
+    const evaluations = this.displayEvaluations;
+    const rows = this.filteredStudents.map((student) => {
+      const row: Record<string, string | number | null> = {
+        Alumno: student.fullName,
+      };
+
+      for (const evaluation of evaluations) {
+        row[evaluation.name] = this.getGradeScore(student, evaluation.id);
+      }
+
+      row['Promedio'] = student.averageRounded;
+      row['En Riesgo'] = student.isBelowPassingGrade ? 'Sí' : 'No';
+
+      return row;
+    });
+
+    const fileName = `taruca-libro-calificaciones-${this.xlsxExport.getCurrentDateStamp()}.xlsx`;
+    this.xlsxExport.exportRowsToXlsx(fileName, 'Libro de Calificaciones', rows);
+    this.toast.success('Libro de calificaciones exportado correctamente.');
   }
 
   openStudentDetails(studentId: string, studentName: string, average: number | null): void {
@@ -765,6 +962,7 @@ export class GradebookPageComponent implements OnInit {
               this.gradebook = picked.gradebook;
               this.infoMessage = null;
               this.selection = null;
+              this.syncSelectionWithFilters();
             } else {
               this.loadGradebook(
                 picked.subject.id,
@@ -798,6 +996,7 @@ export class GradebookPageComponent implements OnInit {
         next: (gradebook) => {
           this.gradebook = gradebook;
           this.infoMessage = null;
+          this.syncSelectionWithFilters();
         },
         error: (err: HttpErrorResponse) => {
           this.gradebook = null;
@@ -808,5 +1007,24 @@ export class GradebookPageComponent implements OnInit {
           this.infoMessage = null;
         },
       });
+  }
+
+  private getGradeScore(student: GradebookResponse['students'][number], evaluationId: string): number | null {
+    const grade = student.grades.find((item) => item.evaluationId === evaluationId);
+    return grade ? grade.score : null;
+  }
+
+  private syncSelectionWithFilters(): void {
+    if (!this.selection) {
+      return;
+    }
+
+    const stillVisible = this.filteredStudents.some(
+      (student) => student.id === this.selection?.student.id,
+    );
+
+    if (!stillVisible) {
+      this.selection = null;
+    }
   }
 }
