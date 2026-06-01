@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error": "#ffffff",
+                    "tertiary": "#006243",
+                    "surface-container-high": "#dce9ff",
+                    "background": "#f8f9ff",
+                    "secondary-fixed-dim": "#bec6e0",
+                    "error": "#ba1a1a",
+                    "surface-container": "#e5eeff",
+                    "secondary": "#565e74",
+                    "on-tertiary-fixed": "#002114",
+                    "on-primary-container": "#eeefff",
+                    "surface-container-highest": "#d3e4fe",
+                    "inverse-surface": "#213145",
+                    "surface": "#f8f9ff",
+                    "surface-container-low": "#eff4ff",
+                    "on-primary-fixed": "#00174b",
+                    "on-background": "#0b1c30",
+                    "tertiary-container": "#007d57",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed-variant": "#005137",
+                    "surface-variant": "#d3e4fe",
+                    "on-surface": "#0b1c30",
+                    "secondary-container": "#dae2fd",
+                    "surface-tint": "#0053db",
+                    "outline-variant": "#c3c6d7",
+                    "on-secondary-fixed-variant": "#3f465c",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "outline": "#737686",
+                    "on-tertiary": "#ffffff",
+                    "on-surface-variant": "#434655",
+                    "on-secondary-fixed": "#131b2e",
+                    "tertiary-fixed-dim": "#68dba9",
+                    "secondary-fixed": "#dae2fd",
+                    "inverse-on-surface": "#eaf1ff",
+                    "surface-dim": "#cbdbf5",
+                    "tertiary-fixed": "#85f8c4",
+                    "primary-fixed": "#dbe1ff",
+                    "inverse-primary": "#b4c5ff",
+                    "surface-bright": "#f8f9ff",
+                    "on-error-container": "#93000a",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "primary-container": "#2563eb",
+                    "on-secondary-container": "#5c647a",
+                    "on-tertiary-container": "#bdffdc",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "primary": "#004ac6",
+                    "error-container": "#ffdad6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sidebar_width": "280px",
+                    "margin_mobile": "16px",
+                    "stack_lg": "24px",
+                    "margin_desktop": "32px",
+                    "gutter": "24px",
+                    "stack_md": "16px",
+                    "stack_sm": "8px"
+            },
+            "fontFamily": {
+                    "body-md": ["Roboto Flex"],
+                    "headline-sm": ["Roboto Flex"],
+                    "headline-lg": ["Roboto Flex"],
+                    "headline-md": ["Roboto Flex"],
+                    "headline-lg-mobile": ["Roboto Flex"],
+                    "body-lg": ["Roboto Flex"],
+                    "label-md": ["Roboto Flex"],
+                    "data-tabular": ["Roboto Flex"]
+            },
+            "fontSize": {
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "data-tabular": ["13px", {"lineHeight": "18px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Roboto Flex', sans-serif;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        .transition-soft {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 md:p-8">
+<div class="w-full max-w-[960px] flex flex-col items-center gap-12">
+<!-- Main Login Card -->
+<main class="glass-card w-full max-w-[440px] rounded-xl shadow-lg p-8 animate-in fade-in zoom-in duration-500">
+<header class="flex flex-col items-center text-center mb-8">
+<div class="w-16 h-16 bg-surface-container rounded-full flex items-center justify-center mb-4">
+<span class="text-3xl">🔐</span>
+</div>
+<h1 class="font-headline-md text-headline-md text-on-surface mb-2">Ingreso Taruca</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Ingresa con email y password...</p>
+</header>
+<!-- Selection Badge -->
+<div class="mb-6 flex justify-center" id="role-badge">
+<span class="inline-flex items-center px-4 py-1.5 rounded-full bg-primary-container text-on-primary-container font-label-md text-label-md uppercase tracking-wider">
+                    Rol seleccionado: <span class="ml-1 font-bold" id="current-role">DIRECTOR</span>
+</span>
+</div>
+<form class="space-y-5" id="login-form" onsubmit="return false;">
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface-variant ml-1" for="email">Correo Electrónico</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">mail</span>
+<input class="w-full pl-10 pr-4 py-3 border border-outline-variant rounded-lg font-body-md text-body-md focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-soft bg-surface-container-lowest" id="email" placeholder="ejemplo@taruca.cl" type="email"/>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface-variant ml-1" for="password">Contraseña</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">lock</span>
+<input class="w-full pl-10 pr-10 py-3 border border-outline-variant rounded-lg font-body-md text-body-md focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-soft bg-surface-container-lowest" id="password" placeholder="••••••••" type="password"/>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-soft" type="button">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+</div>
+<div class="flex justify-end">
+<a class="font-label-md text-label-md text-primary hover:underline decoration-2 underline-offset-4" href="#">¿Olvidaste tu contraseña?</a>
+</div>
+<button class="w-full py-4 bg-primary text-on-primary font-headline-sm text-headline-sm rounded-lg hover:bg-on-primary-fixed-variant shadow-md hover:shadow-lg transition-soft active:scale-95" type="submit">
+                    Ingresar al dashboard
+                </button>
+</form>
+<details class="mt-8 group cursor-pointer">
+<summary class="list-none flex items-center justify-center gap-2 font-label-md text-label-md text-on-surface-variant hover:text-primary transition-soft">
+<span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
+                    Ver credenciales mock
+                </summary>
+<div class="mt-4 p-4 bg-surface-container-low rounded-lg border border-outline-variant">
+<pre class="font-data-tabular text-data-tabular text-on-surface-variant overflow-x-auto">User: director@taruca.edu
+Pass: taruca2024
+Role: DIRECTOR
+                    </pre>
+</div>
+</details>
+</main>
+<!-- Test Profiles Section -->
+<section class="w-full max-w-[800px]">
+<h2 class="font-headline-sm text-headline-sm text-white text-center mb-6">Perfiles de Prueba</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Profile Card: Directora -->
+<button class="text-left group glass-card p-5 rounded-xl border border-white/20 hover:bg-white hover:scale-[1.02] transition-soft shadow-sm hover:shadow-xl" onclick="fillForm('directora@taruca.edu', 'Directora', 'Elena Valdés')">
+<div class="flex items-center gap-4 mb-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="A professional portrait of a senior female educator with a warm and authoritative presence. She has salt-and-pepper hair styled elegantly and wears professional academic attire. The background is a soft-focus library setting with warm, intellectual lighting. The overall aesthetic is trustworthy, sophisticated, and corporate, aligning with a high-end educational institution's brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7K74xxCLw7UUoOp3necKCisn3XhhIwEEQ-eab87qHExziMgdDRdkyISvQxWDl_z-5FIeamaRZOiSJSL_5Iq_CZV6lbAwQ5kg3KAysa1Zi1Za3iVSLMJeLTawVO55jgdfQxOAMCK-phS9bwWOF4e5a1Gnze10Hz3OoQ1_lkS6qps3w_IMriO99BkeyfXBWn4YvSAWS8ZoQ5FXNa1ePt4EqEDh1buamtb9Tiyy4c93rbu7PdJRiptbnv8OaL9PMAt9fzsIq3LZLz4ER"/>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-bold">Directora</span>
+<span class="font-body-md text-body-md text-on-surface truncate">Elena Valdés</span>
+</div>
+</div>
+<p class="font-data-tabular text-data-tabular text-on-surface-variant truncate">directora@taruca.edu</p>
+</button>
+<!-- Profile Card: UTP -->
+<button class="text-left group glass-card p-5 rounded-xl border border-white/20 hover:bg-white hover:scale-[1.02] transition-soft shadow-sm hover:shadow-xl" onclick="fillForm('utp@taruca.edu', 'UTP', 'Marcos Soto')">
+<div class="flex items-center gap-4 mb-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a middle-aged male academic administrator. He wears modern glasses and a smart casual blazer over a button-down shirt. The lighting is bright and clean, typical of a modern office environment. The mood is efficient, organized, and reliable, conveying institutional stability and technical proficiency." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqBk7_ZJzhict0Q4JOn2x3zIbrbjXeqdStBWyvrQcXsS3_k9Gb0O3R4srHpqdphyMgXJZEhnuCfJpEFRv5xDDT1bmsL9WtRoP0PPBbmBAPgjH2dYS_6WeY58k6Ava7m79vA3nYM0juSKwmE-1Bd4WYHtm8A3Vby8Dsi41qNHsJ8fXVd5yABwBisX2otaMjJaM9kOpS2MUvnmaKLO9q2JLXTPMr6r1yXzUSzh0xqDxULyCYkCEaW7FO2jD2ld3pcGfDiwOJ23eS1iIf"/>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-bold">UTP</span>
+<span class="font-body-md text-body-md text-on-surface truncate">Marcos Soto</span>
+</div>
+</div>
+<p class="font-data-tabular text-data-tabular text-on-surface-variant truncate">utp@taruca.edu</p>
+</button>
+<!-- Profile Card: Prof Mat -->
+<button class="text-left group glass-card p-5 rounded-xl border border-white/20 hover:bg-white hover:scale-[1.02] transition-soft shadow-sm hover:shadow-xl" onclick="fillForm('mate@taruca.edu', 'Prof Mat', 'Ana Morales')">
+<div class="flex items-center gap-4 mb-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="A portrait of a young, enthusiastic female mathematics teacher in a modern classroom setting. She has a friendly, approachable smile and is wearing a colorful scarf. The background shows a blurred whiteboard with geometric sketches. The lighting is natural and vibrant, suggesting a creative and engaging educational atmosphere with a focus on student success." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmb1zt2G3VLPMqdyY1aA5a8bAznrd1SXfldtUbqKFxV7rnLe6yKS7hfmt5f9P0-Tqzlo-jlswgTcxSTHqRtHa1_SYuIvqMySNRPQv55L23l1hobSY-zR0L9piU0Oaqcnf5gvL9VOAsctz_VuqnWFXnLpJnBT6ibZgUr1mK9695vVma6y_0x3QL10jP2L4B56H31yK28CDPqDgVwL-ovl1c6SM150BzORW_dxiOxaGIxTlXeoHZUcJTghkEkw-wEp3LWBVcgbWrOWOu"/>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-bold">Prof Mat</span>
+<span class="font-body-md text-body-md text-on-surface truncate">Ana Morales</span>
+</div>
+</div>
+<p class="font-data-tabular text-data-tabular text-on-surface-variant truncate">mate@taruca.edu</p>
+</button>
+<!-- Profile Card: Prof Hist -->
+<button class="text-left group glass-card p-5 rounded-xl border border-white/20 hover:bg-white hover:scale-[1.02] transition-soft shadow-sm hover:shadow-xl" onclick="fillForm('historia@taruca.edu', 'Prof Hist', 'Ricardo Diaz')">
+<div class="flex items-center gap-4 mb-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden">
+<img alt="Avatar" class="w-full h-full object-cover" data-alt="A professional portrait of a male history teacher in his late thirties. He has a short beard and is wearing a corduroy jacket. He is standing in front of a shelf of antique-looking books. The lighting is soft and focused, creating a studious and intellectual mood. The visual style is classic yet contemporary, emphasizing academic depth and institutional trust." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4hZ_ZJkAXm7bwczl-TaOCJyve5qLZj29V8PSlPPyyDwXsyfCfMnkKYWAZiGF9RGs4f7eZg-n4ZEA1SvAF3PuRHjUpZRMMZCY8FA2bQmLWPvYg7zqYejf2rwPN9muFqo-82eEvB7QSzAtrVQmUqQfI1v-7ZcKfmO0H7Ytd-6E52q6zG-adJALuI-LkC9OmdjJtIU_dcgh_VLimmsqNrXqxn9g4JBMcdQA9j0TkrtgoG2hReSnMDh2hqXUVdrHLGwhqt17wQ54hE-e8"/>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-primary font-bold">Prof Hist</span>
+<span class="font-body-md text-body-md text-on-surface truncate">Ricardo Diaz</span>
+</div>
+</div>
+<p class="font-data-tabular text-data-tabular text-on-surface-variant truncate">historia@taruca.edu</p>
+</button>
+</div>
+</section>
+<!-- Footer Logo -->
+<footer class="text-center opacity-80">
+<span class="font-headline-md text-headline-md font-bold text-white tracking-tight">Taruca</span>
+
+</footer>
+</div>
+<script>
+        function fillForm(email, role, name) {
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            const roleSpan = document.getElementById('current-role');
+            const badge = document.getElementById('role-badge');
+
+            // Set values
+            emailInput.value = email;
+            passwordInput.value = 'taruca2024';
+            roleSpan.innerText = role.toUpperCase();
+
+            // Visual feedback animation
+            badge.classList.remove('animate-bounce');
+            void badge.offsetWidth; // trigger reflow
+            badge.classList.add('animate-bounce');
+
+            emailInput.classList.add('ring-2', 'ring-primary');
+            setTimeout(() => {
+                emailInput.classList.remove('ring-2', 'ring-primary');
+            }, 500);
+        }
+
+        // Add some basic form interaction
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Ingresando...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                alert('¡Credenciales válidas! Redirigiendo al dashboard de Taruca...');
+            }, 1500);
+        });
+    </script>
+</body></html>

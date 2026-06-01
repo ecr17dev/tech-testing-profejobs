@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght,GRAD@8..144,25..150,100..1000,-200..150&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for data-heavy grid */
+        .gradebook-scroll::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+        .gradebook-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .gradebook-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .gradebook-scroll::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .sticky-col {
+            position: sticky;
+            left: 0;
+            z-index: 10;
+            background-color: inherit;
+        }
+        .glass-search {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        #editModal {
+            display: none;
+        }
+        #editModal.active {
+            display: flex;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error": "#ffffff",
+                    "tertiary": "#006243",
+                    "surface-container-high": "#dce9ff",
+                    "background": "#f8f9ff",
+                    "secondary-fixed-dim": "#bec6e0",
+                    "error": "#ba1a1a",
+                    "surface-container": "#e5eeff",
+                    "secondary": "#565e74",
+                    "on-tertiary-fixed": "#002114",
+                    "on-primary-container": "#eeefff",
+                    "surface-container-highest": "#d3e4fe",
+                    "inverse-surface": "#213145",
+                    "surface": "#f8f9ff",
+                    "surface-container-low": "#eff4ff",
+                    "on-primary-fixed": "#00174b",
+                    "on-background": "#0b1c30",
+                    "tertiary-container": "#007d57",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed-variant": "#005137",
+                    "surface-variant": "#d3e4fe",
+                    "on-surface": "#0b1c30",
+                    "secondary-container": "#dae2fd",
+                    "surface-tint": "#0053db",
+                    "outline-variant": "#c3c6d7",
+                    "on-secondary-fixed-variant": "#3f465c",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "outline": "#737686",
+                    "on-tertiary": "#ffffff",
+                    "on-surface-variant": "#434655",
+                    "on-secondary-fixed": "#131b2e",
+                    "tertiary-fixed-dim": "#68dba9",
+                    "secondary-fixed": "#dae2fd",
+                    "inverse-on-surface": "#eaf1ff",
+                    "surface-dim": "#cbdbf5",
+                    "tertiary-fixed": "#85f8c4",
+                    "primary-fixed": "#dbe1ff",
+                    "inverse-primary": "#b4c5ff",
+                    "surface-bright": "#f8f9ff",
+                    "on-error-container": "#93000a",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "primary-container": "#2563eb",
+                    "on-secondary-container": "#5c647a",
+                    "on-tertiary-container": "#bdffdc",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "primary": "#004ac6",
+                    "error-container": "#ffdad6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sidebar_width": "280px",
+                    "margin_mobile": "16px",
+                    "stack_lg": "24px",
+                    "margin_desktop": "32px",
+                    "gutter": "24px",
+                    "stack_md": "16px",
+                    "stack_sm": "8px"
+            },
+            "fontFamily": {
+                    "body-md": ["Roboto Flex"],
+                    "headline-sm": ["Roboto Flex"],
+                    "headline-lg": ["Roboto Flex"],
+                    "headline-md": ["Roboto Flex"],
+                    "headline-lg-mobile": ["Roboto Flex"],
+                    "body-lg": ["Roboto Flex"],
+                    "label-md": ["Roboto Flex"],
+                    "data-tabular": ["Roboto Flex"]
+            },
+            "fontSize": {
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "data-tabular": ["13px", {"lineHeight": "18px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden">
+<!-- Sidebar Navigation Shell -->
+<aside class="fixed left-0 top-0 h-full w-[280px] bg-inverse-surface dark:bg-inverse-surface shadow-md flex flex-col p-4 z-50">
+<div class="mb-8 px-4">
+<h1 class="text-headline-md font-headline-md font-bold text-primary-fixed">Taruca</h1>
+<p class="font-label-md text-label-md text-secondary-fixed-dim">Educational Grading</p>
+</div>
+<nav class="flex-grow space-y-2">
+<!-- Dashboard Tab -->
+<a class="flex items-center gap-4 px-4 py-3 text-secondary-fixed-dim hover:bg-on-secondary-fixed-variant hover:text-white rounded-lg transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<!-- Gradebook Tab (Active) -->
+<a class="flex items-center gap-4 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg transition-transform scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book" style="font-variation-settings: 'FILL' 1;">menu_book</span>
+<span class="font-label-md text-label-md">Gradebook</span>
+</a>
+<!-- Academic Data Tab -->
+<a class="flex items-center gap-4 px-4 py-3 text-secondary-fixed-dim hover:bg-on-secondary-fixed-variant hover:text-white rounded-lg transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-label-md text-label-md">Academic Data</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-white/10 pt-4 space-y-2">
+<a class="flex items-center gap-4 px-4 py-3 text-secondary-fixed-dim hover:bg-on-secondary-fixed-variant hover:text-white rounded-lg transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-secondary-fixed-dim hover:bg-on-secondary-fixed-variant hover:text-white rounded-lg transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+<button class="w-full mt-4 py-2 px-4 bg-error text-on-error rounded-lg font-label-md text-label-md hover:bg-opacity-90 transition-all">
+            Logout
+        </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-[280px] min-h-screen flex flex-col">
+<!-- Hero Header -->
+<header class="bg-gradient-to-r from-[#1e3a5f] to-[#2563eb] px-8 py-12 flex flex-col gap-6 shadow-sm">
+<div class="flex justify-between items-center w-full">
+<h2 class="font-headline-lg text-headline-lg text-white">Taruca · Libro de Calificaciones</h2>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-white/80 cursor-pointer hover:text-white" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-white/80 cursor-pointer hover:text-white" data-icon="account_circle" style="font-variation-settings: 'FILL' 1;">account_circle</span>
+</div>
+</div>
+<div class="flex flex-wrap items-center gap-4">
+<div class="relative glass-search rounded-full px-4 py-2 flex items-center gap-3 text-white">
+<span class="material-symbols-outlined text-white/80" data-icon="school">school</span>
+<select class="bg-transparent border-none text-white focus:ring-0 font-body-md cursor-pointer appearance-none pr-8">
+<option class="text-on-surface">Matemáticas · 8vo Básico A · 2026</option>
+<option class="text-on-surface">Ciencias · 8vo Básico A · 2026</option>
+<option class="text-on-surface">Lenguaje · 8vo Básico A · 2026</option>
+</select>
+<span class="material-symbols-outlined absolute right-3 pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</header>
+<div class="p-8 space-y-6">
+<!-- Period Banner -->
+<div class="bg-tertiary-container text-on-tertiary-container px-6 py-3 rounded-xl flex items-center gap-3 shadow-sm border border-tertiary/20">
+<span class="material-symbols-outlined" data-icon="lock_open">lock_open</span>
+<span class="font-body-lg text-body-lg font-medium">Período Abierto: Puedes crear y editar calificaciones</span>
+</div>
+<!-- Main Workspace Grid -->
+<div class="grid grid-cols-12 gap-6 items-start">
+<!-- Grade Grid (Full Width) -->
+<div class="col-span-12 bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden border border-outline-variant">
+<div class="p-6 border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-headline-sm text-headline-sm">Registro de Notas</h3>
+<div class="flex gap-2">
+<button class="p-2 hover:bg-surface-container rounded-lg text-outline transition-colors"><span class="material-symbols-outlined" data-icon="filter_list">filter_list</span></button>
+<button class="p-2 hover:bg-surface-container rounded-lg text-outline transition-colors"><span class="material-symbols-outlined" data-icon="download">download</span></button>
+</div>
+</div>
+<div class="gradebook-scroll overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-on-surface-variant font-label-md text-label-md">
+<th class="sticky-col px-6 py-4 border-b border-outline-variant whitespace-nowrap bg-surface-container-low">Alumno</th>
+<th class="px-6 py-4 border-b border-outline-variant text-center">Prueba 1</th>
+<th class="px-6 py-4 border-b border-outline-variant text-center">Control 1</th>
+<th class="px-6 py-4 border-b border-outline-variant text-center">Taller 1</th>
+<th class="px-6 py-4 border-b border-outline-variant text-center">Ensayo</th>
+<th class="px-6 py-4 border-b border-outline-variant text-center font-bold">Promedio</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant font-data-tabular text-data-tabular">
+<tr class="hover:bg-surface-container-low transition-colors group cursor-pointer" onclick="openEditModal('Ana Pérez', '6.0')">
+<td class="sticky-col px-6 py-4 bg-surface-container-lowest group-hover:bg-surface-container-low flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">AP</div>
+<span>Ana Pérez</span>
+</td>
+<td class="px-6 py-4 text-center">6.0</td>
+<td class="px-6 py-4 text-center">5.5</td>
+<td class="px-6 py-4 text-center">7.0</td>
+<td class="px-6 py-4 text-center">5.8</td>
+<td class="px-6 py-4 text-center font-bold text-primary">6.1</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group cursor-pointer" onclick="openEditModal('Bruno Castillo', '4.5')">
+<td class="sticky-col px-6 py-4 bg-surface-container-lowest group-hover:bg-surface-container-low flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary font-bold">BC</div>
+<span>Bruno Castillo</span>
+</td>
+<td class="px-6 py-4 text-center">4.5</td>
+<td class="px-6 py-4 text-center">
+<div class="flex items-center justify-center gap-1 text-error">
+                                        3.8
+                                        <span class="material-symbols-outlined text-[16px]" data-icon="warning">warning</span>
+</div>
+</td>
+<td class="px-6 py-4 text-center">5.0</td>
+<td class="px-6 py-4 text-center">4.2</td>
+<td class="px-6 py-4 text-center font-bold">4.4</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group cursor-pointer bg-surface-container-high/30" onclick="openEditModal('Carla Morales', '5.2')">
+<td class="sticky-col px-6 py-4 bg-surface-container-lowest group-hover:bg-surface-container-low flex items-center gap-3 border-l-4 border-primary">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">CM</div>
+<span class="font-bold">Carla Morales</span>
+</td>
+<td class="px-6 py-4 text-center font-bold">5.2</td>
+<td class="px-6 py-4 text-center">4.8</td>
+<td class="px-6 py-4 text-center">5.5</td>
+<td class="px-6 py-4 text-center">6.0</td>
+<td class="px-6 py-4 text-center font-bold">5.4</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group cursor-pointer" onclick="openEditModal('Diego García', '3.2')">
+<td class="sticky-col px-6 py-4 bg-surface-container-lowest group-hover:bg-surface-container-low flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary font-bold">DG</div>
+<span>Diego García</span>
+</td>
+<td class="px-6 py-4 text-center">
+<div class="flex items-center justify-center gap-1 text-error">
+                                        3.2
+                                        <span class="material-symbols-outlined text-[16px]" data-icon="warning">warning</span>
+</div>
+</td>
+<td class="px-6 py-4 text-center">4.0</td>
+<td class="px-6 py-4 text-center">3.5</td>
+<td class="px-6 py-4 text-center">4.1</td>
+<td class="px-6 py-4 text-center font-bold text-error">3.7</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors group cursor-pointer" onclick="openEditModal('Elena Vera', '6.8')">
+<td class="sticky-col px-6 py-4 bg-surface-container-lowest group-hover:bg-surface-container-low flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-tertiary/10 flex items-center justify-center text-tertiary font-bold">EV</div>
+<span>Elena Vera</span>
+</td>
+<td class="px-6 py-4 text-center">6.8</td>
+<td class="px-6 py-4 text-center">7.0</td>
+<td class="px-6 py-4 text-center">6.5</td>
+<td class="px-6 py-4 text-center">6.9</td>
+<td class="px-6 py-4 text-center font-bold text-primary">6.8</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<!-- Modal Overlay for Editing -->
+<div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] items-center justify-center p-4" id="editModal">
+<div class="bg-white rounded-xl shadow-2xl border border-outline-variant w-full max-w-lg overflow-hidden flex flex-col">
+<div class="p-6 border-b border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="edit">edit</span>
+<h3 class="font-headline-sm text-headline-sm">Editar calificación</h3>
+</div>
+<button class="p-2 hover:bg-surface-container rounded-full text-outline transition-colors" onclick="closeEditModal()">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<div class="p-6 space-y-6 overflow-y-auto max-h-[70vh]">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant mb-1 uppercase tracking-wider">Estudiante Seleccionado</p>
+<p class="font-body-lg text-body-lg font-bold py-2" id="modalStudentName">Carla Morales</p>
+</div>
+<div>
+<p class="font-label-md text-label-md text-on-surface-variant mb-1 uppercase tracking-wider">Evaluación</p>
+<div class="px-4 py-2 bg-surface-container rounded-lg font-body-md">Prueba 1: Algebra Básica</div>
+</div>
+</div>
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider" for="score">Nota (1.0 - 7.0)</label>
+<input class="w-full px-6 py-4 rounded-xl border border-outline-variant focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all outline-none font-headline-md text-headline-md text-center" id="score" max="7" min="1" step="0.1" type="number" value="5.2"/>
+</div>
+<div class="p-4 rounded-xl bg-surface-container-low flex flex-col gap-2">
+<h4 class="font-label-md text-label-md font-bold text-on-surface-variant uppercase tracking-wider">Historial de edición</h4>
+<div class="flex items-center gap-2 text-xs text-outline">
+<span class="material-symbols-outlined text-sm" data-icon="history">history</span>
+<span>Modificado por Prof. Soto - 12 Mar, 10:45 AM</span>
+</div>
+</div>
+</div>
+<div class="p-6 bg-surface-bright border-t border-outline-variant">
+<div class="flex flex-col gap-3">
+<button class="w-full py-4 bg-primary text-on-primary rounded-xl font-label-md text-label-md font-bold hover:shadow-lg transition-all active:scale-[0.98]">
+                        Guardar Cambios
+                    </button>
+<div class="grid grid-cols-2 gap-3">
+<button class="py-3 px-4 border border-outline-variant text-on-surface rounded-xl font-label-md text-label-md hover:bg-surface-container transition-all" onclick="closeEditModal()">
+                            Cancelar
+                        </button>
+<button class="py-3 px-4 border border-error text-error rounded-xl font-label-md text-label-md hover:bg-error-container transition-all">
+                            Eliminar
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Floating Action Button for Adding Students -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded-full shadow-lg flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-40 group">
+<span class="material-symbols-outlined" data-icon="person_add">person_add</span>
+<span class="absolute right-16 bg-inverse-surface text-white px-3 py-1 rounded text-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Añadir Estudiante</span>
+</button>
+<!-- Footer -->
+<footer class="mt-auto p-8 text-outline-variant text-center text-label-md border-t border-outline-variant/30">
+        © 2026 Taruca Educational Systems. Todos los derechos reservados.
+    </footer>
+</main>
+<script>
+    const editModal = document.getElementById('editModal');
+    const modalStudentName = document.getElementById('modalStudentName');
+    const scoreInput = document.getElementById('score');
+
+    function openEditModal(studentName, grade) {
+        modalStudentName.innerText = studentName;
+        scoreInput.value = grade;
+        editModal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent scroll
+    }
+
+    function closeEditModal() {
+        editModal.classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    // Numeric input validation for grades
+    scoreInput.addEventListener('change', (e) => {
+        let val = parseFloat(e.target.value);
+        if (val > 7) e.target.value = 7.0;
+        if (val < 1) e.target.value = 1.0;
+    });
+
+    // Close modal on background click
+    editModal.addEventListener('click', (e) => {
+        if (e.target === editModal) closeEditModal();
+    });
+</script>
+</body></html>

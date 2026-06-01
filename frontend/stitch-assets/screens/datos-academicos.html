@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error": "#ffffff",
+                    "tertiary": "#006243",
+                    "surface-container-high": "#dce9ff",
+                    "background": "#f8f9ff",
+                    "secondary-fixed-dim": "#bec6e0",
+                    "error": "#ba1a1a",
+                    "surface-container": "#e5eeff",
+                    "secondary": "#565e74",
+                    "on-tertiary-fixed": "#002114",
+                    "on-primary-container": "#eeefff",
+                    "surface-container-highest": "#d3e4fe",
+                    "inverse-surface": "#213145",
+                    "surface": "#f8f9ff",
+                    "surface-container-low": "#eff4ff",
+                    "on-primary-fixed": "#00174b",
+                    "on-background": "#0b1c30",
+                    "tertiary-container": "#007d57",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary-fixed-variant": "#005137",
+                    "surface-variant": "#d3e4fe",
+                    "on-surface": "#0b1c30",
+                    "secondary-container": "#dae2fd",
+                    "surface-tint": "#0053db",
+                    "outline-variant": "#c3c6d7",
+                    "on-secondary-fixed-variant": "#3f465c",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "outline": "#737686",
+                    "on-tertiary": "#ffffff",
+                    "on-surface-variant": "#434655",
+                    "on-secondary-fixed": "#131b2e",
+                    "tertiary-fixed-dim": "#68dba9",
+                    "secondary-fixed": "#dae2fd",
+                    "inverse-on-surface": "#eaf1ff",
+                    "surface-dim": "#cbdbf5",
+                    "tertiary-fixed": "#85f8c4",
+                    "primary-fixed": "#dbe1ff",
+                    "inverse-primary": "#b4c5ff",
+                    "surface-bright": "#f8f9ff",
+                    "on-error-container": "#93000a",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "primary-container": "#2563eb",
+                    "on-secondary-container": "#5c647a",
+                    "on-tertiary-container": "#bdffdc",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary": "#ffffff",
+                    "primary": "#004ac6",
+                    "error-container": "#ffdad6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sidebar_width": "280px",
+                    "margin_mobile": "16px",
+                    "stack_lg": "24px",
+                    "margin_desktop": "32px",
+                    "gutter": "24px",
+                    "stack_md": "16px",
+                    "stack_sm": "8px"
+            },
+            "fontFamily": {
+                    "body-md": ["Roboto Flex"],
+                    "headline-sm": ["Roboto Flex"],
+                    "headline-lg": ["Roboto Flex"],
+                    "headline-md": ["Roboto Flex"],
+                    "headline-lg-mobile": ["Roboto Flex"],
+                    "body-lg": ["Roboto Flex"],
+                    "label-md": ["Roboto Flex"],
+                    "data-tabular": ["Roboto Flex"]
+            },
+            "fontSize": {
+                    "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "data-tabular": ["13px", {"lineHeight": "18px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Roboto Flex', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sidebar-active {
+            @apply bg-primary-container text-on-primary-container;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-full w-[280px] bg-inverse-surface dark:bg-inverse-surface shadow-md flex flex-col p-4 z-50">
+<div class="mb-8 px-4 py-2">
+<h1 class="text-headline-md font-headline-md font-bold text-primary-fixed">Taruca</h1>
+<p class="font-label-md text-label-md text-secondary-fixed-dim">Educational Grading</p>
+</div>
+<nav class="flex-grow space-y-2">
+<a class="flex items-center gap-4 px-4 py-3 text-secondary-fixed-dim hover:bg-on-secondary-fixed-variant hover:text-white transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-secondary-fixed-dim hover:bg-on-secondary-fixed-variant hover:text-white transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-label-md text-label-md">Gradebook</span>
+</a>
+<!-- Active State: Academic Data (Datos Académicos) -->
+<a class="flex items-center gap-4 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="analytics" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="font-label-md text-label-md">Academic Data</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-on-secondary-fixed-variant pt-4 space-y-2">
+<a class="flex items-center gap-4 px-4 py-3 text-secondary-fixed-dim hover:bg-on-secondary-fixed-variant hover:text-white transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 text-secondary-fixed-dim hover:bg-on-secondary-fixed-variant hover:text-white transition-colors duration-200 rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+<button class="mt-4 w-full text-left flex items-center gap-4 px-4 py-3 text-error rounded-lg hover:bg-error/10 transition-colors">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-label-md text-label-md">Logout</span>
+</button>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-[280px] min-h-screen flex flex-col">
+<!-- TopAppBar (Shared Component Overlay Logic) -->
+<header class="sticky top-0 z-40 bg-gradient-to-r from-[#1e3a5f] to-[#2563eb] text-on-primary w-full px-8 py-10 shadow-sm">
+<div class="flex justify-between items-center max-w-7xl mx-auto">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-white mb-1">Datos Académicos</h1>
+<p class="font-body-md text-body-md text-white/80">Vista rápida de asignaturas y períodos académicos para el ciclo lectivo actual.</p>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group hidden lg:block">
+<input class="bg-white/10 border border-white/20 text-white placeholder-white/60 rounded-full px-5 py-2 w-64 focus:outline-none focus:ring-2 focus:ring-white/40 transition-all font-body-md text-body-md" placeholder="Buscar asignatura..." type="text"/>
+<span class="material-symbols-outlined absolute right-4 top-2 text-white/60" data-icon="search">search</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined cursor-pointer hover:bg-white/10 p-2 rounded-full transition-all" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined cursor-pointer hover:bg-white/10 p-2 rounded-full transition-all" data-icon="account_circle">account_circle</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="p-8 max-w-7xl mx-auto w-full flex flex-col gap-12">
+<!-- Section: Asignaturas -->
+<section aria-labelledby="subjects-title">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="auto_stories">auto_stories</span>
+<h2 class="font-headline-md text-headline-md text-on-surface" id="subjects-title">Asignaturas</h2>
+</div>
+<button class="flex items-center gap-2 text-primary font-label-md hover:underline">
+                        Ver todas <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Subject Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow group cursor-pointer relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-tertiary/10 text-tertiary border border-tertiary/20">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary mr-2 animate-pulse"></span>
+                                Abierto
+                            </span>
+</div>
+<div class="flex items-start gap-4 mb-6">
+<div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl" data-icon="calculate">calculate</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">Matemáticas</h3>
+<p class="font-body-md text-body-md text-outline">8vo Básico A</p>
+</div>
+</div>
+<div class="flex justify-between items-center text-on-surface-variant">
+<div class="flex -space-x-2">
+<img alt="Student" class="w-8 h-8 rounded-full border-2 border-white" data-alt="A portrait of a male student with a cheerful expression, wearing a casual polo shirt. The lighting is bright and natural, reflecting a professional yet friendly educational environment with a soft-focus classroom background. The style is clean and high-key." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAo3iLiuFrfhDT5N0Zyskssz_qrTFU5yIbFDdvfxdDdE_pkTsyZtw9BcHjerJDwGsS07J1h60mhqTtcVYveRqL-TxwUJ8i-Z3v7d2crabiSAA177yAhH2T7l1z4HCzu8XrGV9DhEVdk-iSSFoXMl_gTfxW_-wwLHXS93QSkTPyJS-4NIyXxWhBwEbgC54ajXNu8drCKnHpp-s2GAWqDeoammBbnPwMWwKDvaZ6iGTAB5FHpUhLisNZaDO1zVZfCwI-ktG22pECwyJdh"/>
+<img alt="Student" class="w-8 h-8 rounded-full border-2 border-white" data-alt="A portrait of a female student smiling warmly, with soft daylight illuminating her features. She is dressed in academic-casual attire. The background is a modern school library with blurred wooden bookshelves, creating a focused and studious atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhLuwcZNypCv--dlXfgCAFGn2Cm-oRQmkdef1EYh4N9CwH5IKUpppHWR5g7cvAehYbfyq1xROhZYmC-xf4D5kKKGuE0AhBEFKPOFyooHzLI79j3k7KwrDy2Qt8Oj1yUWWN41MHArt1khRG5djbo5RTuekZH_NYIqyK7EvX-4MDsp34UH061e7bja8eFQsIbvkZXt8MM1fOGC0eJ1PHQqCZutEb95lN-lFn6ILcux366WnjboSk5B_vfFNvDN1DJLxz7M9JcssYYUqy"/>
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-[10px] font-bold border-2 border-white">+24</div>
+</div>
+<span class="font-label-md text-label-md uppercase tracking-wider">Ciclo 2026</span>
+</div>
+</div>
+<!-- Subject Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow group cursor-pointer relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4">
+<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-tertiary/10 text-tertiary border border-tertiary/20">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary mr-2 animate-pulse"></span>
+                                Abierto
+                            </span>
+</div>
+<div class="flex items-start gap-4 mb-6">
+<div class="w-12 h-12 bg-secondary/10 rounded-lg flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-2xl" data-icon="history_edu">history_edu</span>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface group-hover:text-primary transition-colors">Historia</h3>
+<p class="font-body-md text-body-md text-outline">8vo Básico A</p>
+</div>
+</div>
+<div class="flex justify-between items-center text-on-surface-variant">
+<div class="flex -space-x-2">
+<img alt="Student" class="w-8 h-8 rounded-full border-2 border-white" data-alt="A confident male educator in a well-lit office, wearing professional spectacles and a collared shirt. The environment is organized and modern, using a color palette of navy blue and soft grays. The lighting is diffused and professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhKIHRav09-O7dhYERkwv4p9MW7CzJvyp12zRYwuaDctrn71uITaEdPqy8TxwEsjjrge-KgTcQ2KIQTqXjQHv3G-HI0xcz-uAMpwJKYZBHwCUCFU3B5eHMAjxCCFsxWH4LTYhoTBZAGniaftM-isgDy7no00QEw2DRDQx-c8JDay5rOpi7F2V2-NaAcBV6Fw0j5r9Ck_fPjJXc6XktMT1FcWxH7ljiLUlyGeq-B84CpiufIOuX9oDxkMtN5JNgR_lTsj6WMCOGlIZe"/>
+<img alt="Student" class="w-8 h-8 rounded-full border-2 border-white" data-alt="A portrait of a young female teacher with a pleasant smile, set against a clean, architectural background of a modern school. The lighting is soft and even, highlighting her approachable and professional demeanor. The style is modern and authoritative." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlkSBerz3apwcHAUMeJRzHUpITqnDipojw_kpz2i__4ymrFtAWCGIo35LuZiSmN36Op95ZhNuWK4reajzzXx23U1cUdADNVzvW931pqsPqVUBhtm_yK3QpRliyGvj9M6FImh7OmPkBbUNQYYxwb7EX1lf7QtSRy5oeqdbsixmbDnlGFYA3Abx8bVWqbsUysbhrLI-bEzMJgLtgW9Ykdhxi3cOUxpIetu6NtnAcqlfODLyMxpgiqLdr5D0tZipwvihjkbhykC-Xz4iE"/>
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-[10px] font-bold border-2 border-white">+18</div>
+</div>
+<span class="font-label-md text-label-md uppercase tracking-wider">Ciclo 2026</span>
+</div>
+</div>
+<!-- CTA New Card (Empty State Trigger) -->
+<div class="border-2 border-dashed border-outline-variant p-6 rounded-xl flex flex-col items-center justify-center text-outline hover:border-primary hover:text-primary hover:bg-primary/5 transition-all cursor-pointer">
+<span class="material-symbols-outlined text-4xl mb-2" data-icon="add_circle">add_circle</span>
+<p class="font-label-md text-label-md font-bold">Nueva Asignatura</p>
+</div>
+</div>
+</section>
+<!-- Section: Períodos Académicos -->
+<section aria-labelledby="periods-title">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-secondary text-3xl" data-icon="calendar_month">calendar_month</span>
+<h2 class="font-headline-md text-headline-md text-on-surface" id="periods-title">Períodos Académicos</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Period Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm flex group">
+<div class="w-4 bg-primary group-hover:w-6 transition-all"></div>
+<div class="p-6 flex-grow flex items-center justify-between">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Primer Semestre 2026</h3>
+<p class="font-body-md text-body-md text-outline">01 de Marzo - 15 de Julio</p>
+<div class="mt-4 flex gap-2">
+<span class="bg-surface-container px-3 py-1 rounded text-[11px] font-bold text-on-surface uppercase">Vigente</span>
+<span class="bg-surface-container px-3 py-1 rounded text-[11px] font-bold text-on-surface uppercase">Evaluación</span>
+</div>
+</div>
+<div class="text-right">
+<span class="block font-headline-md text-headline-md text-primary">65%</span>
+<span class="font-label-md text-label-md text-outline">Completado</span>
+<div class="w-24 h-1.5 bg-surface-container mt-2 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[65%]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Period Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm flex group opacity-75">
+<div class="w-4 bg-outline-variant"></div>
+<div class="p-6 flex-grow flex items-center justify-between">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Segundo Semestre 2026</h3>
+<p class="font-body-md text-body-md text-outline">01 de Agosto - 20 de Diciembre</p>
+<div class="mt-4 flex gap-2">
+<span class="bg-outline-variant/20 px-3 py-1 rounded text-[11px] font-bold text-outline uppercase">Próximo</span>
+</div>
+</div>
+<div class="text-right">
+<span class="block font-headline-md text-headline-md text-outline">0%</span>
+<span class="font-label-md text-label-md text-outline">Planificado</span>
+<div class="w-24 h-1.5 bg-surface-container mt-2 rounded-full overflow-hidden">
+<div class="h-full bg-outline-variant w-0"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Stats/Insight Bento Grid Piece -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<div class="lg:col-span-2 bg-gradient-to-br from-inverse-surface to-[#2c3e50] rounded-2xl p-8 text-white flex flex-col justify-between relative overflow-hidden">
+<div class="z-10">
+<h2 class="font-headline-md text-headline-md mb-2">Resumen de Rendimiento</h2>
+<p class="font-body-md text-body-md text-white/70 max-w-md">Se observa un incremento del 12% en el promedio general de Matemáticas comparado con el período anterior.</p>
+</div>
+<div class="mt-8 flex items-end gap-1 px-2 h-32 z-10">
+<div class="bg-primary-fixed-dim w-full rounded-t" style="height: 40%"></div>
+<div class="bg-primary-fixed-dim w-full rounded-t" style="height: 60%"></div>
+<div class="bg-primary-fixed-dim w-full rounded-t" style="height: 55%"></div>
+<div class="bg-primary-fixed-dim w-full rounded-t" style="height: 80%"></div>
+<div class="bg-primary-fixed-dim w-full rounded-t" style="height: 70%"></div>
+<div class="bg-primary-fixed-dim w-full rounded-t" style="height: 90%"></div>
+<div class="bg-primary-fixed-dim w-full rounded-t" style="height: 85%"></div>
+</div>
+<!-- Decorative background icon -->
+<span class="material-symbols-outlined absolute -bottom-8 -right-8 text-[180px] text-white/5 pointer-events-none" data-icon="insights">insights</span>
+</div>
+<div class="bg-surface-container-high border border-outline-variant rounded-2xl p-8 flex flex-col justify-center items-center text-center">
+<div class="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-4">
+<span class="material-symbols-outlined text-3xl" data-icon="task">task</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Tareas Pendientes</h3>
+<p class="font-body-md text-body-md text-outline mb-6">4 Actas de calificación requieren cierre</p>
+<button class="bg-primary text-on-primary font-label-md px-6 py-2 rounded-full hover:bg-primary/90 transition-colors shadow-sm">
+                        Gestionar ahora
+                    </button>
+</div>
+</section>
+</div>
+<!-- Footer Info -->
+<footer class="mt-auto p-8 border-t border-outline-variant text-center">
+<p class="font-label-md text-label-md text-outline">Taruca © 2026 · Sistema de Gestión Educativa Profesional</p>
+</footer>
+</main>
+<!-- Micro-interactions Script -->
+<script>
+        document.querySelectorAll('.group').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-2px)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body></html>

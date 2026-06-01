@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wght@8..144,100..1000&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-fixed": "#85f8c4",
+                      "surface-tint": "#0053db",
+                      "tertiary-fixed-dim": "#68dba9",
+                      "on-surface-variant": "#434655",
+                      "on-error": "#ffffff",
+                      "tertiary-container": "#007d57",
+                      "surface-variant": "#d3e4fe",
+                      "surface-container-high": "#dce9ff",
+                      "surface": "#f8f9ff",
+                      "on-primary": "#ffffff",
+                      "primary-fixed-dim": "#b4c5ff",
+                      "on-primary-fixed": "#00174b",
+                      "tertiary": "#006243",
+                      "on-tertiary-container": "#bdffdc",
+                      "error-container": "#ffdad6",
+                      "on-tertiary": "#ffffff",
+                      "secondary-container": "#dae2fd",
+                      "on-secondary": "#ffffff",
+                      "on-error-container": "#93000a",
+                      "on-primary-container": "#eeefff",
+                      "error": "#ba1a1a",
+                      "outline": "#737686",
+                      "on-secondary-container": "#5c647a",
+                      "background": "#f8f9ff",
+                      "surface-container-highest": "#d3e4fe",
+                      "surface-bright": "#f8f9ff",
+                      "on-background": "#0b1c30",
+                      "outline-variant": "#c3c6d7",
+                      "surface-container": "#e5eeff",
+                      "surface-container-low": "#eff4ff",
+                      "secondary-fixed": "#dae2fd",
+                      "on-tertiary-fixed-variant": "#005137",
+                      "on-secondary-fixed-variant": "#3f465c",
+                      "secondary-fixed-dim": "#bec6e0",
+                      "inverse-on-surface": "#eaf1ff",
+                      "on-surface": "#0b1c30",
+                      "inverse-surface": "#213145",
+                      "surface-container-lowest": "#ffffff",
+                      "on-primary-fixed-variant": "#003ea8",
+                      "on-tertiary-fixed": "#002114",
+                      "primary": "#004ac6",
+                      "primary-container": "#2563eb",
+                      "on-secondary-fixed": "#131b2e",
+                      "secondary": "#565e74",
+                      "surface-dim": "#cbdbf5",
+                      "primary-fixed": "#dbe1ff",
+                      "inverse-primary": "#b4c5ff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin_mobile": "16px",
+                      "stack_lg": "24px",
+                      "sidebar_width": "280px",
+                      "margin_desktop": "32px",
+                      "stack_sm": "8px",
+                      "stack_md": "16px",
+                      "gutter": "24px"
+              },
+              "fontFamily": {
+                      "headline-lg": ["Roboto Flex"],
+                      "label-md": ["Roboto Flex"],
+                      "headline-lg-mobile": ["Roboto Flex"],
+                      "body-lg": ["Roboto Flex"],
+                      "data-tabular": ["Roboto Flex"],
+                      "body-md": ["Roboto Flex"],
+                      "headline-sm": ["Roboto Flex"],
+                      "headline-md": ["Roboto Flex"]
+              },
+              "fontSize": {
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "data-tabular": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .modal-overlay {
+            background-color: rgba(11, 28, 48, 0.7);
+            backdrop-filter: blur(4px);
+        }
+    </style>
+</head>
+<body class="bg-background font-body-md text-on-background m-0 p-0 overflow-hidden">
+<!-- Background Layer: Gradebook (SCREEN_5) -->
+<div class="fixed inset-0 z-0 pointer-events-none opacity-40">
+<img alt="Gradebook Background" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-M5AjucWsrsaV41TTy3qp_V9dMqkZLSgFApCWu9aI8NQxSFT8QXmpDKRS29DBdASTL_tHdoITqIaRTsVNtlm_3ZSNkZ0yv20k1frJEA5YbwREbjAeTK1WNZXkpVapCU1f_AN0m1xngyqyJ-o84WCfnG4eQke0UscA_JHebZJaI8iA0AwK_1FHhCXQVhEPNpXvidy5cYL8ZQ_gPMUDSggHclXen2B0gObOPWqnu28LsLdwzjAjuDOddf_xsGiUU_bzI_B10sSvEGpz"/>
+</div>
+<!-- Side Navigation (Suppressed for focused modal state but visible in background for context) -->
+<aside class="fixed left-0 top-0 h-full w-[280px] bg-inverse-surface shadow-md flex flex-col p-4 z-10 pointer-events-none opacity-50">
+<div class="mb-8">
+<span class="text-headline-md font-headline-md font-bold text-primary-fixed">Taruca</span>
+<p class="font-label-md text-label-md text-secondary-fixed-dim">Educational Grading</p>
+</div>
+<nav class="flex flex-col gap-2">
+<div class="flex items-center gap-4 px-4 py-3 text-secondary-fixed-dim">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</div>
+<div class="flex items-center gap-4 px-4 py-3 bg-primary-container text-on-primary-container rounded-lg">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-label-md text-label-md">Gradebook</span>
+</div>
+<div class="flex items-center gap-4 px-4 py-3 text-secondary-fixed-dim">
+<span class="material-symbols-outlined">analytics</span>
+<span class="font-label-md text-label-md">Academic Data</span>
+</div>
+</nav>
+</aside>
+<!-- Modal Overlay Container -->
+<div class="fixed inset-0 z-50 flex items-center justify-center modal-overlay p-4">
+<!-- Modal Card -->
+<div class="bg-surface-container-lowest w-full max-w-[640px] rounded-xl shadow-lg overflow-hidden animate-in fade-in zoom-in duration-300">
+<!-- Modal Header -->
+<div class="px-gutter py-stack_lg border-b border-outline-variant flex justify-between items-center bg-surface-container-low">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Nueva Evaluación</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Configure los detalles de la nueva actividad académica.</p>
+</div>
+<button class="text-on-surface-variant hover:bg-surface-variant p-2 rounded-full transition-colors">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Modal Content (Form) -->
+<form class="p-gutter space-y-stack_lg">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Evaluation Name -->
+<div class="col-span-2 md:col-span-1 flex flex-col gap-stack_sm">
+<label class="font-label-md text-label-md text-on-surface-variant px-1">Evaluation Name</label>
+<input class="w-full h-12 px-4 border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-surface-container-lowest transition-all" placeholder="Examen Final" type="text"/>
+</div>
+<!-- Date Picker -->
+<div class="col-span-2 md:col-span-1 flex flex-col gap-stack_sm">
+<label class="font-label-md text-label-md text-on-surface-variant px-1">Date</label>
+<div class="relative">
+<input class="w-full h-12 px-4 border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-surface-container-lowest transition-all appearance-none" type="date"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">calendar_today</span>
+</div>
+</div>
+<!-- Type Dropdown -->
+<div class="col-span-2 md:col-span-1 flex flex-col gap-stack_sm">
+<label class="font-label-md text-label-md text-on-surface-variant px-1">Type</label>
+<div class="relative">
+<select class="w-full h-12 px-4 border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-surface-container-lowest appearance-none transition-all">
+<option value="prueba">Prueba</option>
+<option value="control">Control</option>
+<option value="taller">Taller</option>
+<option value="ensayo">Ensayo</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">expand_more</span>
+</div>
+</div>
+<!-- Weight/Percentage -->
+<div class="col-span-2 md:col-span-1 flex flex-col gap-stack_sm">
+<label class="font-label-md text-label-md text-on-surface-variant px-1">Weight/Percentage</label>
+<div class="relative">
+<input class="w-full h-12 px-4 border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-surface-container-lowest transition-all pr-12" placeholder="20" type="number"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 font-label-md text-on-surface-variant">%</span>
+</div>
+</div>
+</div>
+<!-- Description Area -->
+<div class="flex flex-col gap-stack_sm">
+<label class="font-label-md text-label-md text-on-surface-variant px-1">Description</label>
+<textarea class="w-full p-4 border border-outline-variant rounded-lg focus:border-primary focus:ring-1 focus:ring-primary outline-none bg-surface-container-lowest transition-all resize-none" placeholder="Notas sobre la evaluación..." rows="3"></textarea>
+</div>
+<!-- Stylized Info Card inside Modal -->
+<div class="bg-surface-container-high rounded-lg p-stack_md flex gap-4 items-start border-l-4 border-primary">
+<span class="material-symbols-outlined text-primary">info</span>
+<p class="font-body-md text-body-md text-on-secondary-container">
+                        Esta evaluación será visible para los estudiantes inmediatamente después de su creación. Asegúrese de que el porcentaje sea coherente con el plan de estudios.
+                    </p>
+</div>
+</form>
+<!-- Modal Footer (Actions) -->
+<div class="px-gutter py-stack_lg border-t border-outline-variant flex justify-end gap-stack_md bg-surface-container-lowest">
+<button class="px-6 h-11 font-label-md text-label-md text-on-surface-variant hover:bg-surface-variant rounded-lg transition-colors duration-200">
+                    Cancelar
+                </button>
+<button class="px-8 h-11 font-label-md text-label-md bg-primary text-on-primary rounded-lg shadow-sm hover:bg-surface-tint active:scale-95 transition-all duration-200">
+                    Crear Evaluación
+                </button>
+</div>
+</div>
+</div>
+<!-- Background Illustration for context (Non-functional, decorative) -->
+<div class="fixed top-24 right-32 z-0 opacity-10 pointer-events-none">
+<img class="w-96 h-96 object-contain" data-alt="A sophisticated abstract background pattern composed of architectural blue lines and subtle geometric shapes, conveying a sense of organized academic data and institutional structure. The lighting is high-key and bright, fitting a professional light-mode dashboard aesthetic with deep blue primary accents and soft slate-gray secondary tones. The atmosphere is clean, modern, and trustworthy." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEJxrEadwOODzy0peEJK8lFfmil1KkxXh4gNeSzufiJm3GXNmTxMTmt07Pd5ihH_wL15o1HMx0um5kq1fiXaRFLeztpzF1y_SMNdFKdrg0qCTiDHdfnuq9Q3dgqevydAkK_5hBlv2K6DUL0zPTRhGLdanlrV13maGOKgITrpudca8bYMOAn4-5Cbd6fddWTiZQ9YMLItgEqBO10D28bIj9OUiPCxa9028FG4m6wlzstaXqz34BelFeKKRBafOczE_XaSgrA6mOz6s1"/>
+</div>
+</body></html>
