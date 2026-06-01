@@ -33,7 +33,6 @@ export interface GradeFormSubmitPayload {
             type="text"
             maxlength="120"
             formControlName="evaluationName"
-            [disabled]="disabled"
           />
           @if (
             form.controls.evaluationName.touched &&
@@ -48,7 +47,6 @@ export interface GradeFormSubmitPayload {
             rows="2"
             maxlength="255"
             formControlName="evaluationDescription"
-            [disabled]="disabled"
           ></textarea>
         }
 
@@ -60,7 +58,6 @@ export interface GradeFormSubmitPayload {
           min="1"
           max="7"
           formControlName="score"
-          [disabled]="disabled"
         />
 
         @if (form.controls.score.touched && form.controls.score.invalid) {
@@ -275,6 +272,14 @@ export class GradeFormComponent implements OnChanges {
       this.form.controls.evaluationName.updateValueAndValidity({
         emitEvent: false,
       });
+    }
+
+    if (changes['disabled']) {
+      if (this.disabled) {
+        this.form.disable({ emitEvent: false });
+      } else {
+        this.form.enable({ emitEvent: false });
+      }
     }
   }
 
