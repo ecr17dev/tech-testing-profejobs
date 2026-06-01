@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { TablerIconComponent } from '../../../shared/icons/tabler-icon.component';
 import {
   EvaluationSummary,
   GradebookStudentRow,
@@ -14,6 +15,7 @@ export interface GridCellSelection {
 @Component({
   selector: 'app-grade-grid',
   standalone: true,
+  imports: [TablerIconComponent],
   template: `
     <div class="table-wrapper responsive-table-wrap">
       <table>
@@ -21,7 +23,22 @@ export interface GridCellSelection {
           <tr>
             <th class="sticky">Alumno</th>
             @for (evaluation of evaluations; track evaluation.id) {
-              <th>{{ evaluation.name }}</th>
+              <th>
+                <div class="evaluation-header">
+                  <span>{{ evaluation.name }}</span>
+                  @if (canDeleteEvaluations && !evaluation.id.startsWith('placeholder-')) {
+                    <button
+                      type="button"
+                      class="evaluation-delete-btn"
+                      aria-label="Eliminar evaluación"
+                      [disabled]="readonly"
+                      (click)="requestEvaluationDelete(evaluation)"
+                    >
+                      <i-tabler name="x" class="delete-icon"></i-tabler>
+                    </button>
+                  }
+                </div>
+              </th>
             }
             <th>Promedio</th>
           </tr>
@@ -102,6 +119,42 @@ export interface GridCellSelection {
         min-width: 180px;
       }
 
+      .evaluation-header {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+
+      .evaluation-delete-btn {
+        border: 1px solid #d4dfef;
+        background: #f7f9fc;
+        color: #6e7f99;
+        border-radius: 6px;
+        padding: 0.1rem;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .evaluation-delete-btn:hover:not(:disabled) {
+        border-color: #d92d20;
+        color: #d92d20;
+        background: #fff3f2;
+      }
+
+      .evaluation-delete-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .delete-icon {
+        width: 13px;
+        height: 13px;
+      }
+
       .student-btn {
         border: 0;
         background: transparent;
@@ -164,9 +217,11 @@ export class GradeGridComponent {
   @Input({ required: true }) evaluations: EvaluationSummary[] = [];
   @Input({ required: true }) students: GradebookStudentRow[] = [];
   @Input() readonly = false;
+  @Input() canDeleteEvaluations = false;
 
   @Output() cellSelected = new EventEmitter<GridCellSelection>();
   @Output() studentOpened = new EventEmitter<GradebookStudentRow>();
+  @Output() evaluationDeleteRequested = new EventEmitter<EvaluationSummary>();
 
   gradeValue(student: GradebookStudentRow, evaluationId: string): number | null {
     const grade = student.grades.find((item) => item.evaluationId === evaluationId);
@@ -187,5 +242,9 @@ export class GradeGridComponent {
       gradeId: grade?.id ?? null,
       score: grade?.score ?? null,
     });
+  }
+
+  requestEvaluationDelete(evaluation: EvaluationSummary): void {
+    this.evaluationDeleteRequested.emit(evaluation);
   }
 }

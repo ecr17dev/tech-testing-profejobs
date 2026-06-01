@@ -145,7 +145,9 @@ import { XlsxExportService } from '../../../shared/services/xlsx-export.service'
                 [evaluations]="displayEvaluations"
                 [students]="filteredStudents"
                 [readonly]="!isEditable"
+                [canDeleteEvaluations]="isEditable"
                 (cellSelected)="onCellSelected($event)"
+                (evaluationDeleteRequested)="deleteEvaluation($event)"
                 (studentOpened)="openStudentDetails($event.id, $event.fullName, $event.averageRounded)"
               />
             </article>
@@ -914,6 +916,55 @@ export class GradebookPageComponent implements OnInit {
             error: (err: HttpErrorResponse) => {
               this.toast.error(
                 getHttpErrorMessage(err, 'No fue posible eliminar la calificación.'),
+              );
+            },
+          });
+      });
+  }
+
+  deleteEvaluation(evaluation: EvaluationSummary): void {
+    if (!this.selectedSubject) {
+      return;
+    }
+
+    if (!this.isEditable) {
+      this.toast.warning('El período académico está cerrado para modificaciones');
+      return;
+    }
+
+    this.toast
+      .confirm({
+        title: 'Eliminar evaluación',
+        text: `¿Eliminar la evaluación "${evaluation.name}"? También se eliminarán sus calificaciones asociadas.`,
+        confirmText: 'Sí, eliminar',
+        cancelText: 'Cancelar',
+        icon: 'warning',
+        dangerMode: true,
+      })
+      .then((confirmed) => {
+        if (!confirmed) {
+          return;
+        }
+
+        this.saving = true;
+        this.error = null;
+        this.infoMessage = null;
+
+        this.api
+          .deleteEvaluation(this.selectedSubject!.id, evaluation.id)
+          .pipe(finalize(() => (this.saving = false)))
+          .subscribe({
+            next: () => {
+              this.selection = null;
+              this.toast.success('Evaluación eliminada correctamente.');
+              this.loadGradebook(
+                this.selectedSubject!.id,
+                this.selectedSubject!.academicPeriod.id,
+              );
+            },
+            error: (err: HttpErrorResponse) => {
+              this.toast.error(
+                getHttpErrorMessage(err, 'No fue posible eliminar la evaluación.'),
               );
             },
           });

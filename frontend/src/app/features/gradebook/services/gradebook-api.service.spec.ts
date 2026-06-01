@@ -115,6 +115,14 @@ describe('GradebookApiService', () => {
     });
   });
 
+  it('sends DELETE /subjects/:id/evaluations/:evaluationId when deleting evaluation', () => {
+    service.deleteEvaluation('subject-1', 'eval-2').subscribe();
+
+    const req = httpMock.expectOne('/api/subjects/subject-1/evaluations/eval-2');
+    expect(req.request.method).toBe('DELETE');
+    req.flush(null);
+  });
+
   it('sends PATCH /academic-periods/:id/status when updating period status', () => {
     let result: unknown;
 

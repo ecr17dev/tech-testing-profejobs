@@ -15,6 +15,7 @@ describe('GradebookPageComponent', () => {
     getSubjects: vi.fn(),
     getGradebook: vi.fn(),
     createEvaluation: vi.fn(),
+    deleteEvaluation: vi.fn(),
     createGrade: vi.fn(),
     updateGrade: vi.fn(),
     deleteGrade: vi.fn(),
@@ -324,5 +325,50 @@ describe('GradebookPageComponent', () => {
     expect(toastMock.info).toHaveBeenCalledWith(
       'No hay filas visibles para exportar en el libro de calificaciones.',
     );
+  });
+
+  it('deletes an evaluation after confirmation and reloads gradebook', async () => {
+    fixture = TestBed.createComponent(GradebookPageComponent);
+    component = fixture.componentInstance;
+    component.selectedSubject = {
+      id: 'subject-1',
+      name: 'Matemáticas',
+      course: { id: 'course-1', name: '8vo A' },
+      academicPeriod: {
+        id: 'period-1',
+        name: 'Primer Semestre',
+        year: 2026,
+        isOpen: true,
+      },
+    };
+    toastMock.confirm.mockResolvedValue(true);
+    apiMock.deleteEvaluation.mockReturnValue(of(void 0));
+    apiMock.getGradebook.mockReturnValue(
+      of({
+        subject: {
+          id: 'subject-1',
+          name: 'Matemáticas',
+          course: { id: 'course-1', name: '8vo A' },
+          academicPeriod: { id: 'period-1' },
+        },
+        evaluations: [],
+        students: [],
+      }),
+    );
+
+    component.deleteEvaluation({
+      id: 'eval-1',
+      name: 'Prueba 1',
+      description: null,
+      order: 1,
+    });
+
+    await Promise.resolve();
+
+    expect(apiMock.deleteEvaluation).toHaveBeenCalledWith('subject-1', 'eval-1');
+    expect(toastMock.success).toHaveBeenCalledWith(
+      'Evaluación eliminada correctamente.',
+    );
+    expect(apiMock.getGradebook).toHaveBeenCalledWith('subject-1', 'period-1');
   });
 });

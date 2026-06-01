@@ -111,6 +111,12 @@ export class GradebookApiService {
       .pipe(map((item) => this.mapEvaluationMutation(item)));
   }
 
+  deleteEvaluation(subjectId: string, evaluationId: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.baseUrl}/subjects/${subjectId}/evaluations/${evaluationId}`,
+    );
+  }
+
   private normalizeArray(payload: unknown): unknown[] {
     if (Array.isArray(payload)) {
       return payload;
