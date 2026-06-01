@@ -5,7 +5,7 @@
 ## ⚡ Quick Start
 
 ```bash
-git clone <repo>
+git clone [<repo>](https://github.com/ecr17dev/tech-testing-profejobs)
 npm install
 npm start
 ```
