@@ -1,0 +1,159 @@
+@import 'sweetalert2/dist/sweetalert2.css';
+
+:root {
+  --taruca-bg: #eef2f8;
+  --taruca-bg-soft: #f8f9ff;
+  --taruca-surface: #ffffff;
+  --taruca-border: #d9e0ee;
+  --taruca-text: #0b1c30;
+  --taruca-text-soft: #4f5d73;
+  --taruca-primary: #2563eb;
+  --taruca-primary-dark: #1f4fb6;
+  --taruca-sidebar: #1f334c;
+  --taruca-sidebar-soft: #8ea3bf;
+  --taruca-success: #0a8b4a;
+  --taruca-success-bg: #e6f7ee;
+  --taruca-danger: #ba1a1a;
+  --taruca-danger-bg: #ffdad6;
+  --taruca-shadow-sm: 0 1px 2px rgba(12, 26, 75, 0.08);
+  --taruca-shadow-md: 0 10px 28px rgba(17, 36, 79, 0.14);
+  --taruca-radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto Flex', 'Roboto', Arial, sans-serif;
+  color: var(--taruca-text);
+  background: var(--taruca-bg-soft);
+}
+
+input,
+button,
+select,
+textarea {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+/* SweetAlert2 custom overrides for Taruca design system */
+.swal2-toast {
+  border-radius: 10px !important;
+  box-shadow: 0 10px 28px rgba(17, 36, 79, 0.18) !important;
+  font-family: 'Roboto Flex', 'Roboto', Arial, sans-serif !important;
+  font-size: 0.875rem !important;
+}
+
+.swal2-icon {
+  border-radius: 50% !important;
+  width: 2.2em !important;
+  height: 2.2em !important;
+}
+
+.swal2-icon .swal2-icon-content {
+  font-size: 1.2em !important;
+}
+
+.swal2-popup {
+  border-radius: 12px !important;
+  font-family: 'Roboto Flex', 'Roboto', Arial, sans-serif !important;
+}
+
+.swal2-confirm-btn,
+.swal2-cancel-btn {
+  border-radius: 8px !important;
+  padding: 0.5rem 1.2rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+}
+
+.swal2-deny-button,
+.swal2-cancel-button {
+  border-radius: 8px !important;
+  padding: 0.5rem 1.2rem !important;
+  font-size: 0.875rem !important;
+}
+
+.swal2-timer-progress-bar {
+  border-radius: 0 0 10px 10px !important;
+  background: rgba(0, 0, 0, 0.15) !important;
+}
+
+.swal2-actions {
+  gap: 0.5rem !important;
+}
+
+/* --- Icon utility classes --- */
+i-tabler {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+}
+
+.nav-icon { width: 20px; height: 20px; opacity: 0.85; }
+.menu a.active .nav-icon { opacity: 1; }
+
+.aux-icon { width: 16px; height: 16px; opacity: 0.75; }
+.aux-link:hover .aux-icon { opacity: 1; }
+
+.btn-icon { width: 16px; height: 16px; }
+.close-icon { width: 20px; height: 20px; }
+.back-icon { width: 18px; height: 18px; }
+.hist-icon { width: 16px; height: 16px; }
+.hist-icon.green { color: var(--taruca-success); }
+.search-icon { width: 18px; height: 18px; color: #8a9ab5; }
+.kpi-icon { width: 20px; height: 20px; }
+.notif-icon { width: 16px; height: 16px; flex-shrink: 0; }
+.logout-icon { width: 16px; height: 16px; }
+.icon-wrap { display: inline-flex; align-items: center; justify-content: center; }
+.icon-wrap i-tabler { width: 28px; height: 28px; }
+.icon-wrap.success i-tabler { color: var(--taruca-success); }
+
+/* --- Animation keyframes --- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(18px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in   { animation: fadeIn 180ms ease-out both; }
+.animate-scale-in  { animation: scaleIn 200ms ease-out both; }
+.animate-slide-in  { animation: slideInRight 220ms ease-out both; }
+.animate-slide-up  { animation: slideInUp 180ms ease-out both; }
+
+/* --- Button micro-interactions --- */
+button, .action-btn, .icon-btn, .new-eval {
+  transition: transform 120ms ease, box-shadow 120ms ease, border-color 150ms ease;
+}
+button:not(:disabled):active, .action-btn:not(:disabled):active,
+.icon-btn:not(:disabled):active, .new-eval:not(:disabled):active {
+  transform: scale(0.96);
+}
+
+/* --- Table row hover transition --- */
+tbody tr {
+  transition: background-color 120ms ease;
+}
