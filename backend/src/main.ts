@@ -38,6 +38,7 @@ async function bootstrap() {
     .addTag('Subjects', 'Asignaturas, libro de clases y notas por alumno')
     .addTag('Academic Periods', 'Gestión de períodos académicos (apertura/cierre)')
     .addTag('Students', 'Gestión de alumnos (CRUD, soft delete)')
+    .addTag('Teachers', 'Gestión de profesores (CRUD)')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

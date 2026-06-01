@@ -6,6 +6,7 @@ import { AcademicPeriodsModule } from './academic-periods/academic-periods.modul
 import { GradesModule } from './grades/grades.module';
 import { SubjectsModule } from './subjects/subjects.module';
 import { StudentsModule } from './students/students.module';
+import { TeachersModule } from './teachers/teachers.module';
 import { ALL_ENTITIES } from './database/entities';
 import { InitialSchema1710000000000 } from './database/migrations/1710000000000-initial-schema.migration';
 import { AddStudentFields1710000000001 } from './database/migrations/1710000000001-add-student-fields.migration';
@@ -30,6 +31,7 @@ import { HealthController } from './health.controller';
     GradesModule,
     SubjectsModule,
     StudentsModule,
+    TeachersModule,
   ],
   controllers: [HealthController],
   providers: [
