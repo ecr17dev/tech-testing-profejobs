@@ -315,9 +315,21 @@ import {
       }
 
       .modal app-teacher-form {
+        display: block;
         width: min(520px, calc(100vw - 2rem));
         max-height: calc(100dvh - 2rem);
         overflow-y: auto;
+      }
+
+      @media (max-width: 576px) {
+        .modal {
+          padding: 0.5rem;
+        }
+
+        .modal app-teacher-form {
+          width: calc(100vw - 1rem);
+          max-height: calc(100dvh - 1rem);
+        }
       }
     `,
   ],
